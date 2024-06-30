@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="VirusesGame.MainPage">
+             x:Class="VirusesGame.MainPage"
+             BackgroundImageSource="bg_main_menu.png">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -32,7 +33,7 @@
             Margin="90">
         
             <Label Text="ВОЙНА"
-                   CharacterSpacing="2"
+                   CharacterSpacing="3"
                    FontSize="70"
                    FontFamily="ZeroCool"
                    TextColor="Red"
@@ -40,11 +41,11 @@
             />
 
             <Label Text="ВИРУСОВ"
-                   CharacterSpacing="2"
+                   CharacterSpacing="3"
                    FontSize="70"
                    FontFamily="ZeroCool"
                    TextColor="Green"
-                   AbsoluteLayout.LayoutBounds="290,0"/>
+                   AbsoluteLayout.LayoutBounds="330,0"/>
         </AbsoluteLayout>
         
         <StackLayout
@@ -53,11 +54,14 @@
             Spacing="20">
            
             <Button Text="ИГРАТЬ"
-                    Style="{StaticResource buttonStyle}"/>
+                    Style="{StaticResource buttonStyle}"
+                    Clicked="OnPlayButtonClicked"/>
             <Button Text="ОБУЧЕНИЕ" 
-                    Style="{StaticResource buttonStyle}"/>
+                    Style="{StaticResource buttonStyle}"
+                    Clicked="OnTutorialButtonClicked"/>
             <Button Text="ВЫЙТИ"
-                    Style="{StaticResource buttonStyle}"/>
+                    Style="{StaticResource buttonStyle}"
+                    Clicked="OnExitButtonClicked"/>
         </StackLayout>
     </StackLayout>
 

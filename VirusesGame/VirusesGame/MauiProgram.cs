@@ -11,8 +11,8 @@ namespace VirusesGame
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("ZeroCool.ttf","ZeroCool");
+                    fonts.AddFont("Inkverse-BWDRx.ttf","Inkverse");
                 });
 
 #if DEBUG

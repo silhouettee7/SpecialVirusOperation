@@ -14,9 +14,9 @@ namespace VirusesGame
             await Navigation.PushAsync(new GamePage());
         }
 
-        private void OnTutorialButtonClicked(object sender, EventArgs e)
+        private async void OnTutorialButtonClicked(object sender, EventArgs e)
         {
-
+            await Navigation.PushAsync(new TutorialPage());
         }
 
         private void OnExitButtonClicked(object sender, EventArgs e)

@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VirusesGame.GamePage"
              >
+    <ContentPage.Resources>
+        <ResourceDictionary Source="Resources/Styles/ButtonStyle.xaml" />
+    </ContentPage.Resources>
     <AbsoluteLayout>
         <Grid x:Name="BoardGrid"
                 HorizontalOptions="Center"
@@ -20,12 +23,16 @@
         
         
         <Button Text="СДАТЬСЯ"
-                AbsoluteLayout.LayoutBounds="500,650"/>
+                AbsoluteLayout.LayoutBounds="500,650"
+                Clicked="OnGiveUpButtonClicked"/>
         <Button Text="ОТМЕНИТЬ"
+                Style="{StaticResource buttonStyle}"
                 AbsoluteLayout.LayoutBounds="50,650"/>
         <Button Text="ПОДТВЕРДИТЬ"
+                Style="{StaticResource buttonStyle}"
                 AbsoluteLayout.LayoutBounds="150,650"/>
         <Button Text="ПРОПУСТИТЬ"
+                Style="{StaticResource buttonStyle}"
                 AbsoluteLayout.LayoutBounds="250,650"/>
     </AbsoluteLayout>
 </ContentPage>

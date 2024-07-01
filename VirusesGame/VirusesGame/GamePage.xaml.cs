@@ -70,5 +70,13 @@ public partial class GamePage : ContentPage
         leadingPlayer = player1;
     }
 
-
+    private async void OnGiveUpButtonClicked(object sender, EventArgs e)
+    {
+        bool result = await DisplayAlert("Подтвердить действие", "Вы уверены что хотите сдаться?", "Да", "Нет");
+        if (result)
+        {
+            await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
+        }
+        
+    }
 }

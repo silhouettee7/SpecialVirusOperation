@@ -5,21 +5,7 @@
              BackgroundImageSource="bg_main_menu.png">
 
     <ContentPage.Resources>
-        <ResourceDictionary>
-            
-            <Style x:Key="buttonStyle" TargetType="Button">
-                <Setter Property="TextColor" Value="Black" />
-                <Setter Property="BackgroundColor" Value="#e0e6e6" />
-                <Setter Property="BorderColor" Value="Black"/>
-                <Setter Property="HeightRequest" Value="70" />
-                <Setter Property="WidthRequest" Value="240" />
-                <Setter Property="FontSize" Value="35" />
-                <Setter Property="FontFamily" Value="Inkverse"/>
-                <Setter Property="CornerRadius" Value="22"/>
-                <Setter Property="BorderWidth" Value="2"/>
-
-            </Style>
-        </ResourceDictionary>
+        <ResourceDictionary Source="Resources/Styles/ButtonStyle.xaml" />
     </ContentPage.Resources>
 
     <StackLayout

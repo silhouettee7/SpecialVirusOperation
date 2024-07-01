@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VirusesGame.CongratulationPage"
+             >
+    <ContentPage.Resources>
+        <ResourceDictionary Source="Resources/Styles/ButtonStyle.xaml" />
+    </ContentPage.Resources>
+    <VerticalStackLayout>
+        
+        <Frame
+            CornerRadius="20"
+            Padding="120"
+            HorizontalOptions="Center"
+            >
+
+            <StackLayout>
+                <Label 
+                    Text="ПОБЕДИЛ" 
+                    FontSize="120"
+                    />
+                <Label 
+                    x:Name="CongratulationLabel"
+                    FontSize="120"/>
+            </StackLayout>
+        </Frame>
+        
+        <StackLayout
+            Orientation="Horizontal"
+            Spacing="200">
+            
+            <Button Text="ГЛАВНОЕ МЕНЮ" 
+                    Style="{StaticResource buttonStyle}"
+                    Clicked="OnMainMenuButtonClicked"/>
+            <Button Text="НОВАЯ ИГРА"
+                    Style="{StaticResource buttonStyle}"
+                    Clicked="OnNewGameButtonClicked"/>
+        </StackLayout>
+    </VerticalStackLayout>
+</ContentPage>

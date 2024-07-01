@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VirusesGame.GamePages.TutorialPage"
+             BackgroundImageSource="bg_tutorial.png">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0"
+        Text="Обучение"
+        CharacterSpacing="3"
+        FontSize="35"
+        FontFamily="Mateur"
+        TextColor="#80000000"
+        HorizontalOptions="Center"/>
+
+        <Frame Grid.Row="1"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               WidthRequest="1000"
+            HeightRequest="400"
+
+            BackgroundColor="Gray"
+
+            CornerRadius="20"
+            HasShadow="False">
+            <ScrollView>
+                <VerticalStackLayout>
+                <Label Text="Играют в «войну вирусов» два игрока на доске 10 на 10 клеток, один крестиками, другой ноликами."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="Ходят поочерёдно. Начинают крестики. Каждый ход состоит из трёх отдельных последовательных ходов (назовём их «ходиками»)."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="Каждый «ходик» является либо размножением, либо убиванием. Размножение — это выставление своего символа в любую доступную пустую клетку доски, а убивание — это объявление убитым некоторого чужого символа, который находится на доступной клетке."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="Клетка считается доступной для крестиков, если она либо непосредственно соприкасается (по вертикали, горизонтали или диагонали) с живым крестиком, либо через цепочку убитых ноликов(но не через цепочку убитых крестиков!)."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="Аналогично определяются клетки, доступные для ноликов: либо непосредственно соприкасающиеся с одним из ноликов, либо через цепочку убитых крестиков."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="Убитые крестики обводятся кружком, убитые нолики закрашиваются."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="В начале игры в левом нижнем углу доски стоит крестик, а в правом верхнем - нолик."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="В любой момент игрок может отказаться от хода. Однако выполнение вместо полного хода лишь одного или двух «ходиков» запрещается, за исключением того случая, когда выполнить полный ход невозможно в принципе."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                    <Label Text="Запрещается:
+Ставить свой символ в уже занятую клетку.
+Убивать уже убитые символы противника."
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="Mateur"
+                       FontSize="Medium"
+                       Margin="5"/>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Frame>
+        <Button Grid.Row="2"
+                Text="Назад"
+                HorizontalOptions="Start"
+                VerticalOptions="End"
+                Margin="20"
+                Clicked="OnBackClicked"/>
+    </Grid>
+</ContentPage>

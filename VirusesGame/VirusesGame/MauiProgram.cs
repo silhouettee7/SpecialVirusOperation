@@ -13,6 +13,7 @@ namespace VirusesGame
                 {
                     fonts.AddFont("ZeroCool.ttf","ZeroCool");
                     fonts.AddFont("Inkverse-BWDRx.ttf","Inkverse");
+                    fonts.AddFont("Mateur.ttf", "Mateur");
                 });
 
 #if DEBUG

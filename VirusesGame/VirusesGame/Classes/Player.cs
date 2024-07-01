@@ -8,6 +8,7 @@ namespace VirusesGame.Classes
         private State _symbol;
         public int CountMoves { get; }
         public string Name { get; }
+        
         public Player(State symbol, string name)
         {
             _symbol = symbol;
@@ -29,6 +30,11 @@ namespace VirusesGame.Classes
         }
 
         public void SkipMove()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CheckIsCellAvailable(Board board, int x, int y)
         {
             throw new NotImplementedException();
         }

@@ -29,8 +29,8 @@ public partial class GamePage : ContentPage
                 await Task.Run(() =>
                 {
                     Dispatcher.DispatchAsync(() =>
-                        boardButtons[i, j].Source = board[i, j] == State.Empty ? ImageSource.FromFile("cell.png")
-                        : board[i, j] == State.Zero ? ImageSource.FromFile("circle.png") :
+                        boardButtons[i, j].Source = board[i, j].State == State.Empty ? ImageSource.FromFile("cell.png")
+                        : board[i, j].State == State.Zero ? ImageSource.FromFile("circle.png") :
                         ImageSource.FromFile("cross.png"));
                 });
             }
@@ -77,6 +77,5 @@ public partial class GamePage : ContentPage
         {
             await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
         }
-        
     }
 }

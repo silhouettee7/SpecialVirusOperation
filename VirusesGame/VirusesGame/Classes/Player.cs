@@ -6,7 +6,7 @@ namespace VirusesGame.Classes
     internal class Player : IPlay
     {
         private State _symbol;
-        public int Count { get; }
+        public int CountMoves { get; }
         public string Name { get; }
         public Player(State symbol, string name)
         {
@@ -14,11 +14,6 @@ namespace VirusesGame.Classes
             Name = name;
         }
         public void CancelMove()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GiveUp()
         {
             throw new NotImplementedException();
         }

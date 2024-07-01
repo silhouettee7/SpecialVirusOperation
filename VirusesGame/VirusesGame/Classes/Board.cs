@@ -1,4 +1,5 @@
-﻿using VirusesGame.Enums;
+﻿using System.Runtime.CompilerServices;
+using VirusesGame.Enums;
 
 namespace VirusesGame.Classes
 {
@@ -15,8 +16,12 @@ namespace VirusesGame.Classes
                     _board[i,j] = State.Empty;
                 }
             }
-            _board[0, 0] = State.Cross;
-            _board[9, 9] = State.Zero;
+            _board[0,9] = State.Cross;
+            _board[9,0] = State.Zero;
+        }
+        public State this[int i, int j]
+        {
+            get => _board[i, j];    
         }
     }
 }

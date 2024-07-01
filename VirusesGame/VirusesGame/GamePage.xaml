@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VirusesGame.GamePage"
+             >
+    <AbsoluteLayout>
+        <Grid x:Name="BoardGrid"
+                HorizontalOptions="Center"
+                AbsoluteLayout.LayoutBounds="200,20">
+        </Grid>
+
+        <Frame
+            AbsoluteLayout.LayoutBounds="10,10">
+            <Label Text="Сейчас ходит игрок"
+                   AbsoluteLayout.LayoutBounds="10,50"/>
+            <Label Text="КРАСНЫЙ"
+                   AbsoluteLayout.LayoutBounds="10,80"/>
+        </Frame>
+        
+        
+        
+        <Button Text="СДАТЬСЯ"
+                AbsoluteLayout.LayoutBounds="500,650"/>
+        <Button Text="ОТМЕНИТЬ"
+                AbsoluteLayout.LayoutBounds="50,650"/>
+        <Button Text="ПОДТВЕРДИТЬ"
+                AbsoluteLayout.LayoutBounds="150,650"/>
+        <Button Text="ПРОПУСТИТЬ"
+                AbsoluteLayout.LayoutBounds="250,650"/>
+    </AbsoluteLayout>
+</ContentPage>

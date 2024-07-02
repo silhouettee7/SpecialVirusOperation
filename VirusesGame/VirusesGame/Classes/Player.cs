@@ -5,10 +5,27 @@ namespace VirusesGame.Classes
 {
     internal class Player : IPlay
     {
-        public bool IsThreeMovesDone { get; private set; }
+        private Stack<Tuple<int, int>> moves;
+        
+        private bool isThreeMovesDone;
+
+        public bool IsThreeMovesDone
+        {
+            get 
+            { 
+                if (CountMoves == 3)
+                {
+                    CountMoves = 0;
+                    return true;
+                }
+                return false;
+            }
+            private set { isThreeMovesDone = value; }
+        }
+
         public State Symbol { get; }
         public string Name { get; }
-        private Stack<Tuple<int, int>> moves;
+        public int CountMoves { get; private set; }
         public Player(State symbol, string name)
         {
             Symbol = symbol;
@@ -25,33 +42,31 @@ namespace VirusesGame.Classes
 
         public void Kill(Board board, int x, int y)
         {
-            IsThreeMovesDone = false;
             if (CheckIsCellAvailable(board, x, y))
             {
                 board[x, y].PreviousState = board[x, y].State;
                 board[x, y].State = Symbol == State.Cross ? State.FilledZero
                     :State.СircledСross;
                 moves.Push(Tuple.Create(x, y));
+                CountMoves++;
                 if (moves.Count == 3)
                 {
                     moves.Clear();
-                    IsThreeMovesDone = true;
                 }
             }
         }
 
         public void Multiply(Board board, int x, int y)
         {
-            IsThreeMovesDone = false;
             if (CheckIsCellAvailable(board, x, y))
             {
                 board[x, y].PreviousState = board[x, y].State;
                 board[x, y].State = Symbol;
                 moves.Push(Tuple.Create(x, y));
+                CountMoves++;
                 if (moves.Count == 3)
                 {
                     moves.Clear();
-                    IsThreeMovesDone = true;
                 }
             } 
         }

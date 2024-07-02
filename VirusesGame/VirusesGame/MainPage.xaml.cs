@@ -21,7 +21,7 @@ namespace VirusesGame
 
         private void OnExitButtonClicked(object sender, EventArgs e)
         {
-
+            Application.Current!.Quit();
         }
     }
 

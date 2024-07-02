@@ -76,7 +76,7 @@ public partial class GamePage : ContentPage
         bool result = await DisplayAlert("Подтвердить действие", "Вы уверены что хотите сдаться?", "Да", "Нет");
         if (result)
         {
-            await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
+            await Navigation.PushAsync(new CongratulationPage(secondPlayer.Name));
         }
     }
     private void OnImageButtonClicked(object sender, EventArgs e)
@@ -119,5 +119,10 @@ public partial class GamePage : ContentPage
             }
         }
         return (-1, -1);
+    }
+
+    private void OnConfirmButtonClicked(object sender, EventArgs e)
+    {
+
     }
 }

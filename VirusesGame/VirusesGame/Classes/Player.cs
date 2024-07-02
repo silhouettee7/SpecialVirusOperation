@@ -5,29 +5,55 @@ namespace VirusesGame.Classes
 {
     internal class Player : IPlay
     {
-        private State _symbol;
-        public int CountMoves { get; }
+        public bool IsThreeMovesDone { get; private set; }
+        public State Symbol { get; }
         public string Name { get; }
-        private Stack<Func<Tuple<int, int>>> moves;
+        private Stack<Tuple<int, int>> moves;
         public Player(State symbol, string name)
         {
-            _symbol = symbol;
+            Symbol = symbol;
             Name = name;
-            moves = new Stack<Func<Tuple<int, int>>>();
+            moves = new Stack<Tuple<int, int>>();
         }
-        public void CancelMove()
+        public bool CancelMove(Board board)
         {
-            throw new NotImplementedException();
+            if (moves.Count == 0) return false;
+            var index = moves.Pop();
+            board[index.Item1, index.Item2].State = board[index.Item1, index.Item2].PreviousState;
+            return true;
         }
 
         public void Kill(Board board, int x, int y)
         {
-            
+            IsThreeMovesDone = false;
+            if (CheckIsCellAvailable(board, x, y))
+            {
+                board[x, y].PreviousState = board[x, y].State;
+                board[x, y].State = Symbol == State.Cross ? State.FilledZero
+                    :State.СircledСross;
+                moves.Push(Tuple.Create(x, y));
+                if (moves.Count == 3)
+                {
+                    moves.Clear();
+                    IsThreeMovesDone = true;
+                }
+            }
         }
 
         public void Multiply(Board board, int x, int y)
         {
-            throw new NotImplementedException();
+            IsThreeMovesDone = false;
+            if (CheckIsCellAvailable(board, x, y))
+            {
+                board[x, y].PreviousState = board[x, y].State;
+                board[x, y].State = Symbol;
+                moves.Push(Tuple.Create(x, y));
+                if (moves.Count == 3)
+                {
+                    moves.Clear();
+                    IsThreeMovesDone = true;
+                }
+            } 
         }
 
         public void SkipMove()
@@ -37,7 +63,7 @@ namespace VirusesGame.Classes
 
         public bool CheckIsCellAvailable(Board board, int x, int y)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

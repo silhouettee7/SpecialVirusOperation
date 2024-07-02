@@ -13,6 +13,7 @@ namespace VirusesGame.Classes
             {
                 for (int j = 0; j < 10; j++)
                 {
+                    _board[i, j] = new Cell();
                     _board[i,j].State = State.Empty;
                 }
             }
@@ -21,7 +22,8 @@ namespace VirusesGame.Classes
         }
         public Cell this[int i, int j]
         {
-            get => _board[i, j];    
+            get => _board[i, j];
+            set => _board[i, j] = value;
         }
     }
 }

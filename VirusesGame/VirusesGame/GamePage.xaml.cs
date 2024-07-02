@@ -6,9 +6,8 @@ public partial class GamePage : ContentPage
 {
     private Board board;
     private ImageButton[,] boardButtons;
-    private Player player1;
-    private Player player2;
     private Player leadingPlayer;
+    private Player secondPlayer;
     
     public GamePage()
     {
@@ -28,6 +27,7 @@ public partial class GamePage : ContentPage
             {               
                 await Task.Run(() =>
                 {
+                    boardButtons[i, j].Clicked += OnImageButtonClicked;
                     Dispatcher.DispatchAsync(() =>
                         boardButtons[i, j].Source = board[i, j].State == State.Empty ? ImageSource.FromFile("cell.png")
                         : board[i, j].State == State.Zero ? ImageSource.FromFile("circle.png") :
@@ -65,9 +65,10 @@ public partial class GamePage : ContentPage
 
     public void InitializePlayers()
     {
-        player1 = new Player(State.Cross, " –¿—Õ€…");
-        player2 = new Player(State.Zero, "«≈À≈Õ€…");
+        var player1 = new Player(State.Cross, " –¿—Õ€…");
+        var player2 = new Player(State.Zero, "«≈À≈Õ€…");
         leadingPlayer = player1;
+        secondPlayer = player2;
     }
 
     private async void OnGiveUpButtonClicked(object sender, EventArgs e)
@@ -77,5 +78,46 @@ public partial class GamePage : ContentPage
         {
             await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
         }
+    }
+    private void OnImageButtonClicked(object sender, EventArgs e)
+    {
+        var button = sender as ImageButton;
+        if (button != null)
+        {
+            var location = FindLocationImageButton(button);
+            if (board[location.x, location.y].State == State.Empty)
+            {
+                leadingPlayer.Multiply(board, location.x, location.y);
+                button.Source = leadingPlayer.Symbol == State.Zero ? ImageSource.FromFile("circle.png")
+                    : ImageSource.FromFile("cross.png");
+            }
+            if (board[location.x, location.y].State == secondPlayer.Symbol)
+            {
+                leadingPlayer.Kill(board, location.x, location.y);
+                button.Source = leadingPlayer.Symbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
+                    : ImageSource.FromFile("circle_dead.png");
+            }
+        }
+        if (leadingPlayer.IsThreeMovesDone)
+        {
+            var tempPlayer = leadingPlayer;
+            leadingPlayer = secondPlayer;
+            secondPlayer = tempPlayer;
+            LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
+        }
+    }
+    private (int x, int y) FindLocationImageButton(ImageButton btn)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if (boardButtons[i, j].Equals(btn))
+                {
+                    return (i, j);
+                }
+            }
+        }
+        return (-1, -1);
     }
 }

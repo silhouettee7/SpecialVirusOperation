@@ -16,7 +16,8 @@
             AbsoluteLayout.LayoutBounds="10,10">
             <Label Text="Сейчас ходит игрок"
                    AbsoluteLayout.LayoutBounds="10,50"/>
-            <Label Text="КРАСНЫЙ"
+            <Label x:Name="LeadingPlayer" 
+                   Text="КРАСНЫЙ"
                    AbsoluteLayout.LayoutBounds="10,80"/>
         </Frame>
         

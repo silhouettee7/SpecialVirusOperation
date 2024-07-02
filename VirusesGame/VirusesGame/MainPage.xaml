@@ -6,10 +6,9 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            
             <Style x:Key="buttonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="Black" />
-                <Setter Property="BackgroundColor" Value="#e0e6e6" />
+                <Setter Property="BackgroundColor" Value="#D9D9D9" />
                 <Setter Property="BorderColor" Value="Black"/>
                 <Setter Property="HeightRequest" Value="70" />
                 <Setter Property="WidthRequest" Value="240" />
@@ -17,7 +16,6 @@
                 <Setter Property="FontFamily" Value="Inkverse"/>
                 <Setter Property="CornerRadius" Value="22"/>
                 <Setter Property="BorderWidth" Value="2"/>
-
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -28,23 +26,26 @@
 
 
         <AbsoluteLayout
-            BackgroundColor="#eef3f3"
             HorizontalOptions="Center"
             Margin="90">
-        
+
+            
+            <BoxView
+                Color="#90D9D9D9"
+                AbsoluteLayout.LayoutBounds="-10, -5, 720, 100"/>
+
             <Label Text="ВОЙНА"
                    CharacterSpacing="3"
                    FontSize="70"
                    FontFamily="ZeroCool"
-                   TextColor="Red"
-                   AbsoluteLayout.LayoutBounds="0,0"
-            />
+                   TextColor="#b50000"
+                   AbsoluteLayout.LayoutBounds="0,0"/>
 
             <Label Text="ВИРУСОВ"
                    CharacterSpacing="3"
                    FontSize="70"
                    FontFamily="ZeroCool"
-                   TextColor="Green"
+                   TextColor="#177100"
                    AbsoluteLayout.LayoutBounds="330,0"/>
         </AbsoluteLayout>
         

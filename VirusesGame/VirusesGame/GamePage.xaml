@@ -32,12 +32,14 @@
         <Button Text="ОТМЕНИТЬ"
                 Style="{StaticResource buttonStyle}"
                 AbsoluteLayout.LayoutBounds="50,650"
-                Clicked="OnConfirmButtonClicked"/>
+                Clicked="OnCancelButtonClicked"/>
         <Button Text="ПОДТВЕРДИТЬ"
                 Style="{StaticResource buttonStyle}"
-                AbsoluteLayout.LayoutBounds="150,650"/>
+                AbsoluteLayout.LayoutBounds="150,650"
+                Clicked="OnConfirmButtonClicked"/>
         <Button Text="ПРОПУСТИТЬ"
                 Style="{StaticResource buttonStyle}"
-                AbsoluteLayout.LayoutBounds="250,650"/>
+                AbsoluteLayout.LayoutBounds="250,650"
+                Clicked="OnSkipButtonClicked"/>
     </AbsoluteLayout>
 </ContentPage>

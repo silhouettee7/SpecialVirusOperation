@@ -125,4 +125,14 @@ public partial class GamePage : ContentPage
     {
 
     }
+
+    private void OnCancelButtonClicked(object sender, EventArgs e)
+    {
+
+    }
+
+    private void OnSkipButtonClicked(object sender, EventArgs e)
+    {
+
+    }
 }

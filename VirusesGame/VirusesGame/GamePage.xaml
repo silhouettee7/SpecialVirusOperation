@@ -22,9 +22,9 @@
         </Frame>
         
         
-        <Image x:Name="star1" Source="" />
-        <Image x:Name="star2" Source="" />
-        <Image x:Name="star3" Source="" />
+        <Image x:Name="star1"  />
+        <Image x:Name="star2"  />
+        <Image x:Name="star3"  />
         
         <Button Text="СДАТЬСЯ"
                 AbsoluteLayout.LayoutBounds="500,650"

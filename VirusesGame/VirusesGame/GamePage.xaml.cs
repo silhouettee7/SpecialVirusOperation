@@ -29,9 +29,7 @@ public partial class GamePage : ContentPage
                 {
                     boardButtons[i, j].Clicked += OnImageButtonClicked;
                     Dispatcher.DispatchAsync(() =>
-                        boardButtons[i, j].Source = board[i, j].State == State.Empty ? ImageSource.FromFile("cell.png")
-                        : board[i, j].State == State.Zero ? ImageSource.FromFile("circle.png") :
-                        ImageSource.FromFile("cross.png"));
+                        boardButtons[i, j].Source = LoadImages(i,j));
                 });
             }
         }
@@ -65,8 +63,8 @@ public partial class GamePage : ContentPage
 
     public void InitializePlayers()
     {
-        var player1 = new Player(State.Cross, "КРАСНЫЙ");
-        var player2 = new Player(State.Zero, "ЗЕЛЕНЫЙ");
+        var player1 = new Player(State.Cross, State.FilledZero, "КРАСНЫЙ");
+        var player2 = new Player(State.Zero, State.СircledСross,"ЗЕЛЕНЫЙ");
         leadingPlayer = player1;
         secondPlayer = player2;
     }
@@ -82,27 +80,23 @@ public partial class GamePage : ContentPage
     private void OnImageButtonClicked(object sender, EventArgs e)
     {
         var button = sender as ImageButton;
-        if (button != null)
+        if (button != null && leadingPlayer.CountMoves < 3)
         {
             var location = FindLocationImageButton(button);
             if (board[location.x, location.y].State == State.Empty 
                 && leadingPlayer.CheckIsCellAvailable(board,location.x,location.y))
             {
                 leadingPlayer.Multiply(board, location.x, location.y);
-                button.Source = leadingPlayer.Symbol == State.Zero ? ImageSource.FromFile("circle.png")
+                button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("circle.png")
                     : ImageSource.FromFile("cross.png");
             }
-            if (board[location.x, location.y].State == secondPlayer.Symbol
+            if (board[location.x, location.y].State == secondPlayer.Symbols.nativeSymbol
                 && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y))
             {
                 leadingPlayer.Kill(board, location.x, location.y);
-                button.Source = leadingPlayer.Symbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
+                button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
                     : ImageSource.FromFile("circle_dead.png");
             }
-        }
-        if (leadingPlayer.IsThreeMovesDone)
-        {
-            ReplacePlayer();
         }
     }
     private (int x, int y) FindLocationImageButton(ImageButton btn)
@@ -120,19 +114,48 @@ public partial class GamePage : ContentPage
         return (-1, -1);
     }
 
-    private void OnConfirmButtonClicked(object sender, EventArgs e)
+    private async void OnConfirmButtonClicked(object sender, EventArgs e)
     {
-
+        if (leadingPlayer.CountMoves == 3)
+        {
+            leadingPlayer.Reset();
+            ReplacePlayer();
+        }
+        else
+        {
+            await DisplayAlert("Оповещение", "Вы сделали меньше 3 ходов. Отмените действие или пропустите ход", "ОК");
+        }
     }
 
-    private void OnCancelButtonClicked(object sender, EventArgs e)
+    private async void OnCancelButtonClicked(object sender, EventArgs e)
     {
-
+        if (leadingPlayer.CountMoves == 0)
+        {
+            await DisplayAlert("Оповещение", "Вы не сделали ни одного хода, поэтому не можете отменить его", "ОК");
+        }
+        else
+        {
+            var loc = leadingPlayer.CancelMove(board);
+            boardButtons[loc.x, loc.y].Source = LoadImages(loc.x, loc.y);
+        }
+       
     }
 
-    private void OnSkipButtonClicked(object sender, EventArgs e)
+    private async void OnSkipButtonClicked(object sender, EventArgs e)
     {
-        ReplacePlayer();
+        if (leadingPlayer.CountMoves == 0)
+        {
+            leadingPlayer.Reset();
+            ReplacePlayer();
+        }
+        else if (leadingPlayer.CountMoves == 3)
+        {
+            await DisplayAlert("Оповещение", "Вы сделали 3 хода, нажмите кнопку подвтердить", "ОК");
+        }
+        else
+        {
+            await DisplayAlert("Оповещение", "Вы сделали меньше 3 ходов. Отмените действие или сделайте 3 хода", "ОК");
+        }
     }
     private void ReplacePlayer()
     {
@@ -140,5 +163,11 @@ public partial class GamePage : ContentPage
         leadingPlayer = secondPlayer;
         secondPlayer = tempPlayer;
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
+    }
+    private ImageSource LoadImages(int x, int y)
+    {
+        return board[x, y].State == State.Empty ? ImageSource.FromFile("cell.png")
+            : board[x, y].State == State.Zero ? ImageSource.FromFile("circle.png")
+            : ImageSource.FromFile("cross.png");
     }
 }

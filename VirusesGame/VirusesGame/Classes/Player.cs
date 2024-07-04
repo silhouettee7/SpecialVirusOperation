@@ -42,33 +42,27 @@ namespace VirusesGame.Classes
 
         public void Kill(Board board, int x, int y)
         {
-            if (CheckIsCellAvailable(board, x, y))
+            board[x, y].PreviousState = board[x, y].State;
+            board[x, y].State = Symbol == State.Cross ? State.FilledZero
+                : State.СircledСross;
+            moves.Push(Tuple.Create(x, y));
+            CountMoves++;
+            if (moves.Count == 3)
             {
-                board[x, y].PreviousState = board[x, y].State;
-                board[x, y].State = Symbol == State.Cross ? State.FilledZero
-                    :State.СircledСross;
-                moves.Push(Tuple.Create(x, y));
-                CountMoves++;
-                if (moves.Count == 3)
-                {
-                    moves.Clear();
-                }
+                moves.Clear();
             }
         }
 
         public void Multiply(Board board, int x, int y)
         {
-            if (CheckIsCellAvailable(board, x, y))
+            board[x, y].PreviousState = board[x, y].State;
+            board[x, y].State = Symbol;
+            moves.Push(Tuple.Create(x, y));
+            CountMoves++;
+            if (moves.Count == 3)
             {
-                board[x, y].PreviousState = board[x, y].State;
-                board[x, y].State = Symbol;
-                moves.Push(Tuple.Create(x, y));
-                CountMoves++;
-                if (moves.Count == 3)
-                {
-                    moves.Clear();
-                }
-            } 
+                moves.Clear();
+            }
         }
 
         public void SkipMove()
@@ -78,7 +72,39 @@ namespace VirusesGame.Classes
 
         public bool CheckIsCellAvailable(Board board, int x, int y)
         {
-            return true;
+            (int currX, int currY) currentCellLoc = (x,y);
+            bool succes = true;
+            while (currentCellLoc.currX >= 0 && currentCellLoc.currY >= 0
+                && currentCellLoc.currX <= 9 && currentCellLoc.currY <= 9)
+            {
+                succes = false;
+                bool flag = false;
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        if (j == 0 && i == 0) continue;
+                        int xNeighbor = currentCellLoc.currX + i;
+                        int yNeighbor = currentCellLoc.currY + j;
+                        if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
+                        var neighbor = board[xNeighbor, yNeighbor];
+                        if (neighbor.State == Symbol) return true;
+                        if (neighbor.State == (Symbol == State.Cross ? State.FilledZero
+                            : State.СircledСross))
+                        {
+                            succes = true;
+                            currentCellLoc = (xNeighbor, yNeighbor);
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) break;
+                }
+                if (!succes) break;
+            }
+
+            return succes;
+            
         }
     }
 }

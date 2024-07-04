@@ -85,13 +85,15 @@ public partial class GamePage : ContentPage
         if (button != null)
         {
             var location = FindLocationImageButton(button);
-            if (board[location.x, location.y].State == State.Empty)
+            if (board[location.x, location.y].State == State.Empty 
+                && leadingPlayer.CheckIsCellAvailable(board,location.x,location.y))
             {
                 leadingPlayer.Multiply(board, location.x, location.y);
                 button.Source = leadingPlayer.Symbol == State.Zero ? ImageSource.FromFile("circle.png")
                     : ImageSource.FromFile("cross.png");
             }
-            if (board[location.x, location.y].State == secondPlayer.Symbol)
+            if (board[location.x, location.y].State == secondPlayer.Symbol
+                && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y))
             {
                 leadingPlayer.Kill(board, location.x, location.y);
                 button.Source = leadingPlayer.Symbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
@@ -100,10 +102,7 @@ public partial class GamePage : ContentPage
         }
         if (leadingPlayer.IsThreeMovesDone)
         {
-            var tempPlayer = leadingPlayer;
-            leadingPlayer = secondPlayer;
-            secondPlayer = tempPlayer;
-            LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
+            ReplacePlayer();
         }
     }
     private (int x, int y) FindLocationImageButton(ImageButton btn)
@@ -133,6 +132,13 @@ public partial class GamePage : ContentPage
 
     private void OnSkipButtonClicked(object sender, EventArgs e)
     {
-
+        ReplacePlayer();
+    }
+    private void ReplacePlayer()
+    {
+        var tempPlayer = leadingPlayer;
+        leadingPlayer = secondPlayer;
+        secondPlayer = tempPlayer;
+        LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
     }
 }

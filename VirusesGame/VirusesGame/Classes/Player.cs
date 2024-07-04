@@ -7,7 +7,7 @@ namespace VirusesGame.Classes
     {
         private Stack<Tuple<int, int>> moves;
         public HashSet<ValueTuple<int, int>> AllLivingCells { get; }
-        public (State nativeSymbol, State capturedSymbol) Symbols { get; set; }
+        public (State nativeSymbol, State capturedSymbol) Symbols { get; }
         public string Name { get; }
         public int CountMoves { get; private set; }
         public Player(State nativeSymbol, State capturedSymbol, string name)
@@ -44,41 +44,38 @@ namespace VirusesGame.Classes
             CountMoves++;
         }
 
-        public bool CheckIsCellAvailable(Board board, int x, int y)
+        public bool CheckIsCellAvailable(Board board, int x, int y, bool[,] visited)
         {
-            (int currX, int currY) currentCellLoc = (x,y);
-            bool succes = true;
-            while (currentCellLoc.currX >= 0 && currentCellLoc.currY >= 0
-                && currentCellLoc.currX <= 9 && currentCellLoc.currY <= 9)
+            if (x < 0 || y < 0 || x > 9 || y > 9 || visited[x,y]) return false;
+            for (int i = -1; i <= 1; i++)
             {
-                succes = false;
-                bool flag = false;
-                for (int i = -1; i <= 1; i++)
+                for (int j = -1; j <= 1; j++)
                 {
-                    for (int j = -1; j <= 1; j++)
-                    {
-                        if (j == 0 && i == 0) continue;
-                        int xNeighbor = currentCellLoc.currX + i;
-                        int yNeighbor = currentCellLoc.currY + j;
-                        if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
-                        var neighbor = board[xNeighbor, yNeighbor];
-                        if (neighbor.State == Symbols.nativeSymbol) return true;
-                        if (neighbor.State == Symbols.capturedSymbol)
-                        {
-                            succes = true;
-                            currentCellLoc = (xNeighbor, yNeighbor);
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (flag) break;
+                    if (j == 0 && i == 0) continue;
+                    int xNeighbor = x + i;
+                    int yNeighbor = y + j;
+                    if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
+                    var neighbor = board[xNeighbor, yNeighbor];
+                    if (neighbor.State == Symbols.nativeSymbol) return true;
                 }
-                if (!succes) break;
             }
-
-            return succes;
-            
+            visited[x, y] = true;
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    if (j == 0 && i == 0) continue;
+                    int xNeighbor = x + i;
+                    int yNeighbor = y + j;
+                    if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
+                    var neighbor = board[xNeighbor, yNeighbor];
+                    if (neighbor.State == Symbols.capturedSymbol 
+                        && CheckIsCellAvailable(board, xNeighbor, yNeighbor, visited)) return true ;
+                }
+            }
+            return false;
         }
+
         public void ResetMoves()
         {
             CountMoves = 0;

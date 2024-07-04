@@ -15,7 +15,7 @@ public partial class GamePage : ContentPage
         BuildBoardButtons();
         InitializePlayers();
     }
-    public async void BuildBoardButtons()
+    private async void BuildBoardButtons()
     {
         boardButtons = new ImageButton[10, 10];
         InitializeBoardButtons();
@@ -35,7 +35,7 @@ public partial class GamePage : ContentPage
         }
     }
 
-    public async void InitializeBoardButtons()
+    private async void InitializeBoardButtons()
     {
         for (int i = 0; i < 10; i++)
         {
@@ -61,7 +61,7 @@ public partial class GamePage : ContentPage
         await Task.Delay(100);
     }
 
-    public void InitializePlayers()
+    private void InitializePlayers()
     {
         var player1 = new Player(State.Cross, State.FilledZero, "ÊÐÀÑÍÛÉ");
         var player2 = new Player(State.Zero, State.ÑircledÑross,"ÇÅËÅÍÛÉ");
@@ -83,8 +83,9 @@ public partial class GamePage : ContentPage
         if (button != null && leadingPlayer.CountMoves < 3)
         {
             var location = FindLocationImageButton(button);
+            var visited = new bool[10, 10];
             if (board[location.x, location.y].State == State.Empty 
-                && leadingPlayer.CheckIsCellAvailable(board,location.x,location.y))
+                && leadingPlayer.CheckIsCellAvailable(board,location.x,location.y,visited))
             {
                 leadingPlayer.Multiply(board, location.x, location.y);
                 leadingPlayer.AllLivingCells.Add((location.x,location.y));
@@ -92,7 +93,7 @@ public partial class GamePage : ContentPage
                     : ImageSource.FromFile("cross.png");
             }
             if (board[location.x, location.y].State == secondPlayer.Symbols.nativeSymbol
-                && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y))
+                && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
             {
                 leadingPlayer.Kill(board, location.x, location.y);
                 secondPlayer.AllLivingCells.Remove((location.x, location.y));

@@ -27,7 +27,7 @@ public partial class GamePage : ContentPage
             {               
                 await Task.Run(() =>
                 {
-                    boardButtons[i, j].Clicked += OnImageButtonClicked;
+                    boardButtons[i, j].Clicked += OnImageButtonClicked!;
                     Dispatcher.DispatchAsync(() =>
                         boardButtons[i, j].Source = LoadImages(i,j));
                 });
@@ -77,7 +77,7 @@ public partial class GamePage : ContentPage
             await Navigation.PushAsync(new CongratulationPage(secondPlayer.Name));
         }
     }
-    private void OnImageButtonClicked(object sender, EventArgs e)
+    private async void OnImageButtonClicked(object sender, EventArgs e)
     {
         var button = sender as ImageButton;
         if (button != null && leadingPlayer.CountMoves < 3)
@@ -87,6 +87,7 @@ public partial class GamePage : ContentPage
                 && leadingPlayer.CheckIsCellAvailable(board,location.x,location.y))
             {
                 leadingPlayer.Multiply(board, location.x, location.y);
+                leadingPlayer.AllLivingCells.Add((location.x,location.y));
                 button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("circle.png")
                     : ImageSource.FromFile("cross.png");
             }
@@ -94,8 +95,14 @@ public partial class GamePage : ContentPage
                 && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y))
             {
                 leadingPlayer.Kill(board, location.x, location.y);
+                secondPlayer.AllLivingCells.Remove((location.x, location.y));
                 button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
                     : ImageSource.FromFile("circle_dead.png");
+            }
+            if (secondPlayer.AllLivingCells.Count == 0)
+            {
+                await Task.Delay(500);
+                await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
             }
         }
     }
@@ -118,7 +125,6 @@ public partial class GamePage : ContentPage
     {
         if (leadingPlayer.CountMoves == 3)
         {
-            leadingPlayer.Reset();
             ReplacePlayer();
         }
         else
@@ -145,7 +151,6 @@ public partial class GamePage : ContentPage
     {
         if (leadingPlayer.CountMoves == 0)
         {
-            leadingPlayer.Reset();
             ReplacePlayer();
         }
         else if (leadingPlayer.CountMoves == 3)
@@ -159,10 +164,12 @@ public partial class GamePage : ContentPage
     }
     private void ReplacePlayer()
     {
+        leadingPlayer.ResetMoves();
         var tempPlayer = leadingPlayer;
         leadingPlayer = secondPlayer;
         secondPlayer = tempPlayer;
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
+        
     }
     private ImageSource LoadImages(int x, int y)
     {

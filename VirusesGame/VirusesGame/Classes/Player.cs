@@ -6,6 +6,7 @@ namespace VirusesGame.Classes
     internal class Player : IPlay
     {
         private Stack<Tuple<int, int>> moves;
+        public HashSet<ValueTuple<int, int>> AllLivingCells { get; }
         public (State nativeSymbol, State capturedSymbol) Symbols { get; set; }
         public string Name { get; }
         public int CountMoves { get; private set; }
@@ -14,6 +15,10 @@ namespace VirusesGame.Classes
             Symbols = (nativeSymbol,capturedSymbol);
             Name = name;
             moves = new Stack<Tuple<int, int>>();
+            AllLivingCells = new HashSet<(int, int)>()
+            {
+                nativeSymbol == State.Zero ? (9,0) : (0,9)
+            };
         }
         public (int x, int y) CancelMove(Board board)
         {
@@ -74,7 +79,7 @@ namespace VirusesGame.Classes
             return succes;
             
         }
-        public void Reset()
+        public void ResetMoves()
         {
             CountMoves = 0;
             moves.Clear();

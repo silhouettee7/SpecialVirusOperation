@@ -52,6 +52,7 @@ public partial class GamePage : ContentPage
             for (int j = 0; j < 10; j++)
             {
                 boardButtons[i, j] = new ImageButton();
+                boardButtons[i, j].AutomationId = $"{i},{j}";
                 boardButtons[i, j].BorderColor = Colors.Black;
                 boardButtons[i, j].BorderWidth = 1;
                 BoardGrid.Add(boardButtons[i, j], i, j);
@@ -82,7 +83,8 @@ public partial class GamePage : ContentPage
         var button = sender as ImageButton;
         if (button != null && leadingPlayer.CountMoves < 3)
         {
-            var location = FindLocationImageButton(button);
+            var loctionArr = FindLocationImageButton(button);
+            (int x, int y) location = (loctionArr[0], loctionArr[1]);
             var visited = new bool[10, 10];
             if (board[location.x, location.y].State == State.Empty 
                 && leadingPlayer.CheckIsCellAvailable(board,location.x,location.y,visited))
@@ -107,19 +109,11 @@ public partial class GamePage : ContentPage
             }
         }
     }
-    private (int x, int y) FindLocationImageButton(ImageButton btn)
+    private int[] FindLocationImageButton(ImageButton btn)
     {
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                if (boardButtons[i, j].Equals(btn))
-                {
-                    return (i, j);
-                }
-            }
-        }
-        return (-1, -1);
+        return btn.AutomationId.Split(',')
+            .Select(int.Parse)
+            .ToArray();
     }
 
     private async void OnConfirmButtonClicked(object sender, EventArgs e)

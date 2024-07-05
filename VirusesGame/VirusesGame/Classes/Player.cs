@@ -6,79 +6,80 @@ namespace VirusesGame.Classes
     internal class Player : IPlay
     {
         private Stack<Tuple<int, int>> moves;
-        
-        private bool isThreeMovesDone;
-
-        public bool IsThreeMovesDone
-        {
-            get 
-            { 
-                if (CountMoves == 3)
-                {
-                    CountMoves = 0;
-                    return true;
-                }
-                return false;
-            }
-            private set { isThreeMovesDone = value; }
-        }
-
-        public State Symbol { get; }
+        public HashSet<ValueTuple<int, int>> AllLivingCells { get; }
+        public (State nativeSymbol, State capturedSymbol) Symbols { get; }
         public string Name { get; }
         public int CountMoves { get; private set; }
-        public Player(State symbol, string name)
+        public Player(State nativeSymbol, State capturedSymbol, string name)
         {
-            Symbol = symbol;
+            Symbols = (nativeSymbol,capturedSymbol);
             Name = name;
             moves = new Stack<Tuple<int, int>>();
+            AllLivingCells = new HashSet<(int, int)>()
+            {
+                nativeSymbol == State.Zero ? (9,0) : (0,9)
+            };
         }
-        public bool CancelMove(Board board)
+        public (int x, int y) CancelMove(Board board)
         {
-            if (moves.Count == 0) return false;
             var index = moves.Pop();
+            CountMoves--;
             board[index.Item1, index.Item2].State = board[index.Item1, index.Item2].PreviousState;
-            return true;
+            return (index.Item1,index.Item2);
         }
 
         public void Kill(Board board, int x, int y)
         {
-            if (CheckIsCellAvailable(board, x, y))
-            {
-                board[x, y].PreviousState = board[x, y].State;
-                board[x, y].State = Symbol == State.Cross ? State.FilledZero
-                    :State.СircledСross;
-                moves.Push(Tuple.Create(x, y));
-                CountMoves++;
-                if (moves.Count == 3)
-                {
-                    moves.Clear();
-                }
-            }
+            board[x, y].PreviousState = board[x, y].State;
+            board[x, y].State = Symbols.capturedSymbol;
+            moves.Push(Tuple.Create(x, y));
+            CountMoves++;
         }
 
         public void Multiply(Board board, int x, int y)
         {
-            if (CheckIsCellAvailable(board, x, y))
+            board[x, y].PreviousState = board[x, y].State;
+            board[x, y].State = Symbols.nativeSymbol;
+            moves.Push(Tuple.Create(x, y));
+            CountMoves++;
+        }
+
+        public bool CheckIsCellAvailable(Board board, int x, int y, bool[,] visited)
+        {
+            if (x < 0 || y < 0 || x > 9 || y > 9 || visited[x,y]) return false;
+            for (int i = -1; i <= 1; i++)
             {
-                board[x, y].PreviousState = board[x, y].State;
-                board[x, y].State = Symbol;
-                moves.Push(Tuple.Create(x, y));
-                CountMoves++;
-                if (moves.Count == 3)
+                for (int j = -1; j <= 1; j++)
                 {
-                    moves.Clear();
+                    if (j == 0 && i == 0) continue;
+                    int xNeighbor = x + i;
+                    int yNeighbor = y + j;
+                    if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
+                    var neighbor = board[xNeighbor, yNeighbor];
+                    if (neighbor.State == Symbols.nativeSymbol) return true;
                 }
-            } 
+            }
+            visited[x, y] = true;
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    if (j == 0 && i == 0) continue;
+                    int xNeighbor = x + i;
+                    int yNeighbor = y + j;
+                    if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
+                    var neighbor = board[xNeighbor, yNeighbor];
+                    if (neighbor.State == Symbols.capturedSymbol 
+                        && CheckIsCellAvailable(board, xNeighbor, yNeighbor, visited)) return true ;
+                }
+            }
+            return false;
         }
 
-        public void SkipMove()
+        public void ResetMoves()
         {
-            throw new NotImplementedException();
-        }
-
-        public bool CheckIsCellAvailable(Board board, int x, int y)
-        {
-            return true;
+            CountMoves = 0;
+            moves.Clear();
         }
     }
 }

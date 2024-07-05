@@ -22,10 +22,17 @@ namespace VirusesGame.Classes
         }
         public (int x, int y) CancelMove(Board board)
         {
-            var index = moves.Pop();
-            CountMoves--;
-            board[index.Item1, index.Item2].State = board[index.Item1, index.Item2].PreviousState;
-            return (index.Item1,index.Item2);
+            if (moves.Count > 0)
+            {
+                var index = moves.Pop();
+                CountMoves--;
+                board[index.Item1, index.Item2].State = board[index.Item1, index.Item2].PreviousState;
+                return (index.Item1, index.Item2);
+            }
+            else
+            {
+                throw new IndexOutOfRangeException(nameof(moves));
+            }
         }
 
         public void Kill(Board board, int x, int y)

@@ -75,11 +75,7 @@ public partial class GamePage : ContentPage
 
     private async void OnGiveUpButtonClicked(object sender, EventArgs e)
     {
-        bool result = await DisplayAlert("Подтвердить действие", "Вы уверены что хотите сдаться?", "Да", "Нет");
-        if (result)
-        {
-            await Navigation.PushAsync(new CongratulationPage(secondPlayer.Name));
-        }
+        await DisplaySurrenderPopup();
     }
     private async void OnImageButtonClicked(object sender, EventArgs e)
     {
@@ -212,6 +208,19 @@ public partial class GamePage : ContentPage
     {
         var popup = new NotificationPopup(message);
         await this.ShowPopupAsync(popup);
+    }
+    public async Task DisplaySurrenderPopup()
+    {
+        var popup = new SurrenderPopup();
+        var result = await this.ShowPopupAsync(popup, CancellationToken.None);
+
+        if (result is bool boolResult)
+        {
+            if (boolResult)
+            {
+                await Navigation.PushAsync(new CongratulationPage(secondPlayer.Name));
+            }
+        }
     }
 
 }

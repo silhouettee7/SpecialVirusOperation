@@ -223,4 +223,14 @@ public partial class GamePage : ContentPage
         }
     }
 
+    private async void OnInjectionButtonClicked(object sender, EventArgs e)
+    {
+        await DisplayNotification("Вы использовали сыворотку!");
+    }
+
+    private async void OnExpansionButtonClicked(object sender, EventArgs e)
+    {
+        await DisplayNotification("Вы использовали расширение!");
+    }
+
 }

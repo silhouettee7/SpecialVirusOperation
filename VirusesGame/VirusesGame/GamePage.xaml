@@ -41,6 +41,25 @@
                    
                    AbsoluteLayout.LayoutBounds="0.5,0.5"
                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
+            
+            <Label x:Name="InjectionCount"
+                   FontFamily="Inkverse"
+                   Text="колво сывороток: 228"
+                   FontSize="30"
+                   TextColor="Black"
+                   
+                   AbsoluteLayout.LayoutBounds="0.5, 0.7"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"/>
+            
+            <Label x:Name="ExpansionCount"
+                   FontFamily="Inkverse"
+                   Text="колво расширений: 337"
+                   FontSize="30"
+                   TextColor="Black"
+
+                   AbsoluteLayout.LayoutBounds="0.5, 0.9"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                   
         </AbsoluteLayout>
 
 
@@ -48,21 +67,21 @@
                Source="star.png"
                WidthRequest="100"
                HeightRequest="100"
-               AbsoluteLayout.LayoutBounds="0.88, 0.15"
+               AbsoluteLayout.LayoutBounds="0.8, 0.1"
                AbsoluteLayout.LayoutFlags="PositionProportional"/>
         
         <Image x:Name="star2"
                Source="star.png"
                WidthRequest="100"
                HeightRequest="100"
-               AbsoluteLayout.LayoutBounds="0.88, 0.3"
+               AbsoluteLayout.LayoutBounds="0.88, 0.1"
                AbsoluteLayout.LayoutFlags="PositionProportional"/>
         
         <Image x:Name="star3"
                Source="star.png"
                WidthRequest="100"
                HeightRequest="100"
-               AbsoluteLayout.LayoutBounds="0.88, 0.45"
+               AbsoluteLayout.LayoutBounds="0.96, 0.1"
                AbsoluteLayout.LayoutFlags="PositionProportional"/>
         
         <Button Text="ОТМЕНИТЬ"
@@ -93,9 +112,25 @@
                 BorderColor="Black"
                 FontSize="35"
                 BorderWidth="2"
-                AbsoluteLayout.LayoutBounds="0.88, 0.75"
+                AbsoluteLayout.LayoutBounds="0.96, 0.95"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 Clicked="OnGiveUpButtonClicked"/>
+
+        <Button x:Name="InjectionButton"
+                Text="Сыворотка"
+                Style="{StaticResource buttonStyle}"
+                Clicked="OnInjectionButtonClicked"
+                
+                AbsoluteLayout.LayoutBounds="0.88, 0.4"
+                AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        
+        <Button x:Name="ExpansionButton"
+                Text="Расширение"
+                Style="{StaticResource buttonStyle}"
+                Clicked="OnExpansionButtonClicked"
+                
+                AbsoluteLayout.LayoutBounds="0.88, 0.6"
+                AbsoluteLayout.LayoutFlags="PositionProportional"/>
         
     </AbsoluteLayout>
 </ContentPage>

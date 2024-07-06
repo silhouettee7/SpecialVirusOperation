@@ -44,7 +44,7 @@
                WidthRequest="1000"
             HeightRequest="400"
 
-            BackgroundColor="#74D9D9D9"
+            BackgroundColor="#ECECEC"
 
             CornerRadius="20"
             HasShadow="False">

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirusesGame.Enums
 {
-    internal enum State
+    public enum State
     {
         Empty,
         Zero,

@@ -3,7 +3,7 @@ using VirusesGame.Interfaces;
 using VirusesGame.Enums;
 namespace VirusesGame.Classes
 {
-    internal class Player : IPlay
+    public class Player : IPlay
     {
         private Stack<Tuple<int, int>> moves;
         public HashSet<ValueTuple<int, int>> AllLivingCells { get; }

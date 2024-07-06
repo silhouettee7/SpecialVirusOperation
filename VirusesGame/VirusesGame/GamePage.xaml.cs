@@ -1,3 +1,5 @@
+using Microsoft.Maui.Devices.Sensors;
+using System.Xml.Serialization;
 using VirusesGame.Classes;
 using VirusesGame.Enums;
 namespace VirusesGame;
@@ -178,7 +180,8 @@ public partial class GamePage : ContentPage
         var tempPlayer = leadingPlayer;
         leadingPlayer = secondPlayer;
         secondPlayer = tempPlayer;
-        LeadingPlayer.Text = leadingPlayer.Name.ToUpper(); 
+        LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
+        LeadingPlayer.TextColor = leadingPlayer.Name == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0): new Color(181,0,0);
     }
     private ImageSource LoadImages(int x, int y)
     {
@@ -203,4 +206,5 @@ public partial class GamePage : ContentPage
                 throw new ArgumentOutOfRangeException("Превышено кол-во ходов или не сделан ни один");
         }
     }
+    
 }

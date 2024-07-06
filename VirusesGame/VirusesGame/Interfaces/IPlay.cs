@@ -5,7 +5,6 @@ namespace VirusesGame.Interfaces
     {
         void Kill(Board board,int x, int y);
         void Multiply(Board board, int x, int y);
-        bool CancelMove(Board board);
-        void SkipMove();
+        (int x, int y) CancelMove(Board board);
     }
 }

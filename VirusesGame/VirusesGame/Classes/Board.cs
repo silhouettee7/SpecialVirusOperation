@@ -3,7 +3,7 @@ using VirusesGame.Enums;
 
 namespace VirusesGame.Classes
 {
-    internal class Board
+    public class Board
     {
         private Cell[,]? _board;
         public void Initialize()

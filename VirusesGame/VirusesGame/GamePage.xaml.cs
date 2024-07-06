@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Devices.Sensors;
 using System.Xml.Serialization;
 using VirusesGame.Classes;
@@ -131,7 +132,7 @@ public partial class GamePage : ContentPage
         }
         else
         {
-            await DisplayAlert("Оповещение", "Вы сделали меньше 3 ходов. Отмените действие или пропустите ход", "ОК");
+            await DisplayNotification("Вы сделали меньше 3 ходов.\nОтмените действие или пропустите ход");
         }
     }
 
@@ -140,7 +141,7 @@ public partial class GamePage : ContentPage
         switch (leadingPlayer.CountMoves)
         {
             case 0:
-                await DisplayAlert("Оповещение", "Вы не сделали ни одного хода, поэтому не можете отменить его", "ОК");
+                await DisplayNotification("Вы не сделали ни одного хода,\nпоэтому не можете отменить его");
                 return;
             case 1:
                 star1.Source = ImageSource.FromFile("star.png");
@@ -167,11 +168,11 @@ public partial class GamePage : ContentPage
         }
         else if (leadingPlayer.CountMoves == 3)
         {
-            await DisplayAlert("Оповещение", "Вы сделали 3 хода, нажмите кнопку подвтердить", "ОК");
+            await DisplayNotification("Вы сделали 3 хода\nнажмите кнопку подвтердить");
         }
         else
         {
-            await DisplayAlert("Оповещение", "Вы сделали меньше 3 ходов. Отмените действие или сделайте 3 хода", "ОК");
+            await DisplayNotification("Вы сделали меньше 3 ходов.\nОтмените действие или сделайте 3 хода");
         }
     }
     private void ReplacePlayer()
@@ -207,4 +208,10 @@ public partial class GamePage : ContentPage
         }
     }
     
+    public async Task DisplayNotification(string message)
+    {
+        var popup = new NotificationPopup(message);
+        await this.ShowPopupAsync(popup);
+    }
+
 }

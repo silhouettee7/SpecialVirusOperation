@@ -1,3 +1,5 @@
+using Microsoft.Maui.Devices.Sensors;
+using System.Xml.Serialization;
 using VirusesGame.Classes;
 using VirusesGame.Enums;
 namespace VirusesGame;
@@ -91,6 +93,7 @@ public partial class GamePage : ContentPage
             {
                 leadingPlayer.Multiply(board, location.x, location.y);
                 leadingPlayer.AllLivingCells.Add((location.x,location.y));
+                SetActiveStarsImages();
                 button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("circle.png")
                     : ImageSource.FromFile("cross.png");
             }
@@ -99,6 +102,7 @@ public partial class GamePage : ContentPage
             {
                 leadingPlayer.Kill(board, location.x, location.y);
                 secondPlayer.AllLivingCells.Remove((location.x, location.y));
+                SetActiveStarsImages();
                 button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
                     : ImageSource.FromFile("circle_dead.png");
             }
@@ -121,6 +125,9 @@ public partial class GamePage : ContentPage
         if (leadingPlayer.CountMoves == 3)
         {
             ReplacePlayer();
+            star1.Source = ImageSource.FromFile("star.png");
+            star2.Source = ImageSource.FromFile("star.png");
+            star3.Source = ImageSource.FromFile("star.png");
         }
         else
         {
@@ -130,16 +137,26 @@ public partial class GamePage : ContentPage
 
     private async void OnCancelButtonClicked(object sender, EventArgs e)
     {
-        if (leadingPlayer.CountMoves == 0)
+        switch (leadingPlayer.CountMoves)
         {
-            await DisplayAlert("Оповещение", "Вы не сделали ни одного хода, поэтому не можете отменить его", "ОК");
+            case 0:
+                await DisplayAlert("Оповещение", "Вы не сделали ни одного хода, поэтому не можете отменить его", "ОК");
+                return;
+            case 1:
+                star1.Source = ImageSource.FromFile("star.png");
+                break;
+            case 2:
+                star2.Source = ImageSource.FromFile("star.png");
+                break;
+            case 3:
+                star3.Source = ImageSource.FromFile("star.png");
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("Превышено количество допустим ходов");
         }
-        else
-        {
-            var loc = leadingPlayer.CancelMove(board);
-            boardButtons[loc.x, loc.y].Source = LoadImages(loc.x, loc.y);
-        }
-       
+        var loc = leadingPlayer.CancelMove(board);
+        boardButtons[loc.x, loc.y].Source = LoadImages(loc.x, loc.y);
+
     }
 
     private async void OnSkipButtonClicked(object sender, EventArgs e)
@@ -164,7 +181,7 @@ public partial class GamePage : ContentPage
         leadingPlayer = secondPlayer;
         secondPlayer = tempPlayer;
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
-        
+        LeadingPlayer.TextColor = leadingPlayer.Name == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0): new Color(181,0,0);
     }
     private ImageSource LoadImages(int x, int y)
     {
@@ -172,4 +189,22 @@ public partial class GamePage : ContentPage
             : board[x, y].State == State.Zero ? ImageSource.FromFile("circle.png")
             : ImageSource.FromFile("cross.png");
     }
+    private void SetActiveStarsImages()
+    {
+        switch (leadingPlayer.CountMoves)
+        {
+            case 1:
+                star1.Source = ImageSource.FromFile("star_active.png");
+                break;
+            case 2:
+                star2.Source = ImageSource.FromFile("star_active.png");
+                break;
+            case 3:
+                star3.Source = ImageSource.FromFile("star_active.png");
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("Превышено кол-во ходов или не сделан ни один");
+        }
+    }
+    
 }

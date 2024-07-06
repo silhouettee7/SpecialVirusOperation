@@ -2,39 +2,55 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VirusesGame.CongratulationPage"
+             BackgroundImageSource="bg_game.png"
              >
     <ContentPage.Resources>
         <ResourceDictionary Source="Resources/Styles/ButtonStyle.xaml" />
     </ContentPage.Resources>
-    <VerticalStackLayout>
-        
+    <AbsoluteLayout>
+
         <Frame
             CornerRadius="20"
             Padding="120"
             HorizontalOptions="Center"
+            BackgroundColor="#67d9d9d9"
+            
+            AbsoluteLayout.LayoutBounds="0.5, 0.3"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
             >
 
-            <StackLayout>
-                <Label 
+            <VerticalStackLayout>
+                <Label
                     Text="ПОБЕДИЛ" 
-                    FontSize="120"
+                    FontSize="80"
+                    FontFamily="Inkverse"
+                    TextColor="Black"
+                    
+                    HorizontalOptions="Center"
                     />
                 <Label 
                     x:Name="CongratulationLabel"
-                    FontSize="120"/>
-            </StackLayout>
+                    FontSize="120"
+                    FontFamily="ZeroCool"
+                    TextColor="Black"
+                    
+                    HorizontalOptions="Center"
+                    />
+            </VerticalStackLayout>
         </Frame>
-        
-        <StackLayout
-            Orientation="Horizontal"
-            Spacing="200">
-            
-            <Button Text="ГЛАВНОЕ МЕНЮ" 
+
+
+        <Button Text="ГЛАВНОЕ МЕНЮ" 
                     Style="{StaticResource buttonStyle}"
-                    Clicked="OnMainMenuButtonClicked"/>
-            <Button Text="НОВАЯ ИГРА"
+                    FontSize="30"
+                    Clicked="OnMainMenuButtonClicked"
+                    AbsoluteLayout.LayoutBounds="0.33, 0.95"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        <Button Text="НОВАЯ ИГРА"
                     Style="{StaticResource buttonStyle}"
-                    Clicked="OnNewGameButtonClicked"/>
-        </StackLayout>
-    </VerticalStackLayout>
+                    FontSize="30"
+                    Clicked="OnNewGameButtonClicked"
+                    AbsoluteLayout.LayoutBounds="0.66, 0.95"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
+    </AbsoluteLayout>
 </ContentPage>

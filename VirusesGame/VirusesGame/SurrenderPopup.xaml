@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup x:Class="VirusesGame.SurrenderPopup"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             Color="Transparent">
+
+    <mct:Popup.Resources>
+        <ResourceDictionary Source="Resources/Styles/ButtonStyle.xaml" />
+    </mct:Popup.Resources>
+    
+    <Frame
+        CornerRadius="20"
+        BackgroundColor="#FBF7F7">
+        <VerticalStackLayout>
+            
+            <Label
+                x:Name="MessageLabel"
+                FontSize="27"
+                TextColor="Black"
+                Text="Вы уверены&#10;что хотите сдаться?"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                FontFamily="Inkverse"/>
+
+            <AbsoluteLayout>
+
+                <Button
+                    Clicked="OnYesButtonClicked"
+                    Text="ДА"
+                    AbsoluteLayout.LayoutBounds="0.2, 0.7"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    WidthRequest="80"
+                    HeightRequest="62"
+                    Style="{StaticResource buttonStyle}"
+                    FontSize="23"/>
+                <Button
+                    Clicked="OnNoButtonClicked"
+                    Text="НЕТ"
+                    AbsoluteLayout.LayoutBounds="0.8, 0.7"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    WidthRequest="80"
+                    HeightRequest="62"
+                    Style="{StaticResource buttonStyle}"
+                    FontSize="23"/>
+
+            </AbsoluteLayout>
+            
+        </VerticalStackLayout>
+    </Frame>
+    
+    
+</mct:Popup>

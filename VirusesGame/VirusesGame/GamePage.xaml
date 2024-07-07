@@ -44,7 +44,7 @@
             
             <Label x:Name="InjectionCount"
                    FontFamily="Inkverse"
-                   Text="колво сывороток: 228"
+                   Text="Осталось сывороток: 3"
                    FontSize="30"
                    TextColor="Black"
                    

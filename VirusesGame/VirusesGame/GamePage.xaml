@@ -116,21 +116,23 @@
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 Clicked="OnGiveUpButtonClicked"/>
 
-        <Button x:Name="InjectionButton"
-                Text="Сыворотка"
-                Style="{StaticResource buttonStyle}"
-                Clicked="OnInjectionButtonClicked"
-                
-                AbsoluteLayout.LayoutBounds="0.88, 0.4"
-                AbsoluteLayout.LayoutFlags="PositionProportional"/>
-        
-        <Button x:Name="ExpansionButton"
-                Text="Расширение"
-                Style="{StaticResource buttonStyle}"
-                Clicked="OnExpansionButtonClicked"
-                
-                AbsoluteLayout.LayoutBounds="0.88, 0.6"
-                AbsoluteLayout.LayoutFlags="PositionProportional"/>
-        
+        <ImageButton x:Name="InjectionButton"
+                     Source="injection_button.png"
+                     WidthRequest="100"
+                     HeightRequest="100"
+                     Clicked="OnInjectionButtonClicked"
+                     
+                     AbsoluteLayout.LayoutBounds="0.88, 0.4"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+        <ImageButton x:Name="ExpansionButton"
+                     Source="expansion_button.png"
+                     WidthRequest="100"
+                     HeightRequest="100"
+                     Clicked="OnExpansionButtonClicked"
+                     
+                     AbsoluteLayout.LayoutBounds="0.88, 0.6"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
     </AbsoluteLayout>
 </ContentPage>

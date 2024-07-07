@@ -11,7 +11,9 @@ public partial class GamePage : ContentPage
     private ImageButton[,] boardButtons;
     private Player leadingPlayer;
     private Player secondPlayer;
-    
+    private bool injectionSelectionMode;
+    private static ValueTuple<int, int>[] nearbyCellsCoords = new ValueTuple<int, int>[] {(0, 0), (1, 0), (0, 1), (0, -1), (-1, 0) };
+
     public GamePage()
     {
         InitializeComponent();
@@ -85,28 +87,61 @@ public partial class GamePage : ContentPage
             var loctionArr = FindLocationImageButton(button);
             (int x, int y) location = (loctionArr[0], loctionArr[1]);
             var visited = new bool[10, 10];
-            if (board[location.x, location.y].State == State.Empty 
-                && leadingPlayer.CheckIsCellAvailable(board,location.x,location.y,visited))
+            if (injectionSelectionMode)
             {
-                leadingPlayer.Multiply(board, location.x, location.y);
-                leadingPlayer.AllLivingCells.Add((location.x,location.y));
-                SetActiveStarsImages();
-                button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("circle.png")
-                    : ImageSource.FromFile("cross.png");
+                if (board[location.x, location.y].State == State.Empty
+                        || board[location.x, location.y].State == leadingPlayer.Symbols.nativeSymbol
+                            || board[location.x, location.y].State == secondPlayer.Symbols.nativeSymbol)
+                {
+                    leadingPlayer.DecreaseNumberOfInjections();
+                    InjectionCount.Text = $"Осталось сывороток: {leadingPlayer.InjectionsLeft}";
+                    injectionSelectionMode = !injectionSelectionMode;
+                }
+                if (board[location.x, location.y].State == leadingPlayer.Symbols.capturedSymbol
+                            || board[location.x, location.y].State == secondPlayer.Symbols.capturedSymbol)
+                {
+                    leadingPlayer.UseInjection(board, location.x, location.y);
+                    InjectionCount.Text = $"Осталось сывороток: {leadingPlayer.InjectionsLeft}";
+                    foreach (var nearbyCoord in nearbyCellsCoords)
+                    {
+                        if (location.x + nearbyCoord.Item1 < 0
+                            || location.y + nearbyCoord.Item2 < 0
+                                || location.x + nearbyCoord.Item1 > 9
+                                    || location.y + nearbyCoord.Item2 > 9)
+                            continue;
+                        if (board[location.x + nearbyCoord.Item1, location.y + nearbyCoord.Item2].State == State.Empty)
+                        {
+                            boardButtons[location.x + nearbyCoord.Item1, location.y + nearbyCoord.Item2].Source = ImageSource.FromFile("cell.png");
+                        }
+                    }
+                    injectionSelectionMode = !injectionSelectionMode;
+                }
             }
-            if (board[location.x, location.y].State == secondPlayer.Symbols.nativeSymbol
-                && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
+            else
             {
-                leadingPlayer.Kill(board, location.x, location.y);
-                secondPlayer.AllLivingCells.Remove((location.x, location.y));
-                SetActiveStarsImages();
-                button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
-                    : ImageSource.FromFile("circle_dead.png");
-            }
-            if (secondPlayer.AllLivingCells.Count == 0)
-            {
-                await Task.Delay(500);
-                await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
+                if (board[location.x, location.y].State == State.Empty
+                    && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
+                {
+                    leadingPlayer.Multiply(board, location.x, location.y);
+                    leadingPlayer.AllLivingCells.Add((location.x, location.y));
+                    SetActiveStarsImages();
+                    button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("circle.png")
+                        : ImageSource.FromFile("cross.png");
+                }
+                if (board[location.x, location.y].State == secondPlayer.Symbols.nativeSymbol
+                    && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
+                {
+                    leadingPlayer.Kill(board, location.x, location.y);
+                    secondPlayer.AllLivingCells.Remove((location.x, location.y));
+                    SetActiveStarsImages();
+                    button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
+                        : ImageSource.FromFile("circle_dead.png");
+                }
+                if (secondPlayer.AllLivingCells.Count == 0)
+                {
+                    await Task.Delay(500);
+                    await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
+                }
             }
         }
     }
@@ -119,7 +154,11 @@ public partial class GamePage : ContentPage
 
     private async void OnConfirmButtonClicked(object sender, EventArgs e)
     {
-        if (leadingPlayer.CountMoves == 3)
+        if (injectionSelectionMode)
+        {
+            await DisplayNotification("Сначала используйте сыворотку");
+        }
+        else if (leadingPlayer.CountMoves == 3)
         {
             ReplacePlayer();
             star1.Source = ImageSource.FromFile("star.png");
@@ -134,31 +173,41 @@ public partial class GamePage : ContentPage
 
     private async void OnCancelButtonClicked(object sender, EventArgs e)
     {
-        switch (leadingPlayer.CountMoves)
+        if (injectionSelectionMode)
         {
-            case 0:
-                await DisplayNotification("Вы не сделали ни одного хода,\nпоэтому не можете отменить его");
-                return;
-            case 1:
-                star1.Source = ImageSource.FromFile("star.png");
-                break;
-            case 2:
-                star2.Source = ImageSource.FromFile("star.png");
-                break;
-            case 3:
-                star3.Source = ImageSource.FromFile("star.png");
-                break;
-            default:
-                throw new ArgumentOutOfRangeException("Превышено количество допустим ходов");
+            await DisplayNotification("Сначала используйте сыворотку");
         }
-        var loc = leadingPlayer.CancelMove(board);
-        boardButtons[loc.x, loc.y].Source = LoadImages(loc.x, loc.y);
-
+        else
+        {
+            switch (leadingPlayer.CountMoves)
+            {
+                case 0:
+                    await DisplayNotification("Вы не сделали ни одного хода,\nпоэтому не можете отменить его");
+                    return;
+                case 1:
+                    star1.Source = ImageSource.FromFile("star.png");
+                    break;
+                case 2:
+                    star2.Source = ImageSource.FromFile("star.png");
+                    break;
+                case 3:
+                    star3.Source = ImageSource.FromFile("star.png");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("Превышено количество допустим ходов");
+            }
+            var loc = leadingPlayer.CancelMove(board);
+            boardButtons[loc.x, loc.y].Source = LoadImages(loc.x, loc.y);
+        }
     }
 
     private async void OnSkipButtonClicked(object sender, EventArgs e)
     {
-        if (leadingPlayer.CountMoves == 0)
+        if (injectionSelectionMode)
+        {
+            await DisplayNotification("Сначала используйте сыворотку");
+        }
+        else if (leadingPlayer.CountMoves == 0)
         {
             ReplacePlayer();
         }
@@ -179,6 +228,7 @@ public partial class GamePage : ContentPage
         secondPlayer = tempPlayer;
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
         LeadingPlayer.TextColor = leadingPlayer.Name == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0): new Color(181,0,0);
+        InjectionCount.Text = $"Осталось сывороток: {leadingPlayer.InjectionsLeft}";
     }
     private ImageSource LoadImages(int x, int y)
     {
@@ -225,7 +275,14 @@ public partial class GamePage : ContentPage
 
     private async void OnInjectionButtonClicked(object sender, EventArgs e)
     {
-        await DisplayNotification("Вы использовали сыворотку!");
+        if (leadingPlayer.CountMoves > 0)
+            await DisplayNotification("Сыворотку можно использовать только до начала хода");
+        else if (leadingPlayer.InjectionsLeft == 0)
+            await DisplayNotification("У вас не осталось сыворотки");
+        else
+        {
+            injectionSelectionMode = !injectionSelectionMode;
+        }
     }
 
     private async void OnExpansionButtonClicked(object sender, EventArgs e)

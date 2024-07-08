@@ -52,7 +52,7 @@
                HorizontalOptions="Center"
                VerticalOptions="Center"
                WidthRequest="1000"
-            HeightRequest="400"
+            HeightRequest="700"
 
             BackgroundColor="#F8F8FF"
 

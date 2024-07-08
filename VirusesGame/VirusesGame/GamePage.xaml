@@ -7,7 +7,7 @@
     <ContentPage.Resources>
         <ResourceDictionary Source="Resources/Styles/ButtonStyle.xaml" />
     </ContentPage.Resources>
-    <AbsoluteLayout>
+    <AbsoluteLayout x:Name="MainLayout">
         <Grid x:Name="BoardGrid"
               AbsoluteLayout.LayoutBounds="0.5, 0.25"
               AbsoluteLayout.LayoutFlags="PositionProportional"
@@ -53,7 +53,7 @@
             
             <Label x:Name="ExpansionCount"
                    FontFamily="Inkverse"
-                   Text="колво расширений: 337"
+                   Text="Осталось расширений: 1"
                    FontSize="30"
                    TextColor="Black"
 

@@ -22,49 +22,48 @@ public partial class GamePage : ContentPage
     }
     private async void BuildBoardButtons()
     {
-        boardButtons = new ImageButton[10, 10];
+        boardButtons = new ImageButton[12, 12];
         InitializeBoardButtons();
-        board = new Board();
+        board = new Board(12, 12);
         board.Initialize();
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
-            {               
+            {
                 await Task.Run(() =>
                 {
-                    boardButtons[i, j].Clicked += OnImageButtonClicked!;
                     Dispatcher.DispatchAsync(() =>
-                        boardButtons[i, j].Source = LoadImages(i,j));
+                        boardButtons[i, j].Source = LoadImages(i, j));
                 });
             }
         }
     }
 
-    private async void InitializeBoardButtons()
+    private void InitializeBoardButtons()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 12; i++)
         {
-            BoardGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
+            BoardGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(50) });
         }
 
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < 12; j++)
         {
-            BoardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
+            BoardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(50) });
         }
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 12; i++)
         {
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < 12; j++)
             {
                 boardButtons[i, j] = new ImageButton();
                 boardButtons[i, j].AutomationId = $"{i},{j}";
                 boardButtons[i, j].BorderColor = Colors.Black;
                 boardButtons[i, j].BorderWidth = 1;
-                BoardGrid.Add(boardButtons[i, j], i, j);
+                boardButtons[i, j].Clicked += OnImageButtonClicked!;
+                boardButtons[i, j].BackgroundColor = Colors.White;
+                if (i < 10 && j < 10) BoardGrid.Add(boardButtons[i, j], j, i);
             }
         }
-
-        await Task.Delay(100);
     }
 
     private void InitializePlayers()
@@ -86,7 +85,7 @@ public partial class GamePage : ContentPage
         {
             var loctionArr = FindLocationImageButton(button);
             (int x, int y) location = (loctionArr[0], loctionArr[1]);
-            var visited = new bool[10, 10];
+            var visited = new bool[board.xCurrLength, board.yCurrLength];
             if (injectionSelectionMode)
             {
                 if (board[location.x, location.y].State == State.Empty
@@ -234,6 +233,8 @@ public partial class GamePage : ContentPage
     {
         return board[x, y].State == State.Empty ? ImageSource.FromFile("cell.png")
             : board[x, y].State == State.Zero ? ImageSource.FromFile("circle.png")
+            : board[x, y].State == State.СircledСross ? ImageSource.FromFile("cross_dead.png")
+            : board[x, y].State == State.FilledZero ? ImageSource.FromFile("circle_dead.png")
             : ImageSource.FromFile("cross.png");
     }
     private void SetActiveStarsImages()
@@ -258,6 +259,7 @@ public partial class GamePage : ContentPage
     {
         var popup = new NotificationPopup(message);
         await this.ShowPopupAsync(popup);
+        await Task.Delay(1000);
     }
     public async Task DisplaySurrenderPopup()
     {
@@ -287,7 +289,43 @@ public partial class GamePage : ContentPage
 
     private async void OnExpansionButtonClicked(object sender, EventArgs e)
     {
-        await DisplayNotification("Вы использовали расширение!");
+        if (leadingPlayer.IsExpansionDone) return;
+        var random = new Random();
+        var rowOrColumn = random.Next(0, 2);
+        var positionInBoard = random.Next(0, rowOrColumn == 0 ? board.xCurrLength + 1 : board.yCurrLength + 1);
+        int xStart = rowOrColumn == 0 ? positionInBoard : 0;
+        int yStart = rowOrColumn == 1 ? positionInBoard : 0;
+        var list = new State[board.yCurrLength];
+        var notification = DisplayNotification("Вы использовали расширение!");
+        for (int i = xStart; i < board.xCurrLength + (rowOrColumn == 1 ? 0 : 1); i++)
+        {
+            var tempPrevState = State.Empty;
+            for (int j = yStart; j < board.yCurrLength + (rowOrColumn == 0 ? 0 : 1); j++)
+            {
+                if (rowOrColumn == 1)
+                {
+                    var tempCurrState = board[i, j].State;
+                    board[i, j].State = tempPrevState;
+                    tempPrevState = tempCurrState;
+                    if (j == board.yCurrLength) BoardGrid.Add(boardButtons[i, j], j, i);
+                }
+                else
+                {
+                    var tempCurrState = board[i, j].State;
+                    board[i, j].State = list[j];
+                    list[j] = tempCurrState;
+                    if (i == board.xCurrLength) BoardGrid.Add(boardButtons[i, j], j, i);
+                }
+
+                await Task.Run(() => Dispatcher.DispatchAsync(() =>
+                        boardButtons[i, j].Source = LoadImages(i, j)));
+
+            }
+        }
+        if (rowOrColumn == 0) board.xCurrLength++;
+        else board.yCurrLength++;
+        leadingPlayer.IsExpansionDone = true;
+        await notification;
     }
 
     private async void OnTieButtonClicked(object sender, EventArgs e)

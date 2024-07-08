@@ -12,6 +12,7 @@ namespace VirusesGame.Classes
         public (State nativeSymbol, State capturedSymbol) Symbols { get; }
         public string Name { get; }
         public int CountMoves { get; private set; }
+        public bool IsExpansionDone { get; set; }
         public Player(State nativeSymbol, State capturedSymbol, string name)
         {
             Symbols = (nativeSymbol,capturedSymbol);
@@ -19,7 +20,7 @@ namespace VirusesGame.Classes
             moves = new Stack<Tuple<int, int>>();
             AllLivingCells = new HashSet<(int, int)>()
             {
-                nativeSymbol == State.Zero ? (9,0) : (0,9)
+                nativeSymbol == State.Zero ? (0,9) : (9,0)
             };
         }
         public void UseInjection(Board board, int x, int y)
@@ -74,7 +75,8 @@ namespace VirusesGame.Classes
 
         public bool CheckIsCellAvailable(Board board, int x, int y, bool[,] visited)
         {
-            if (x < 0 || y < 0 || x > 9 || y > 9 || visited[x,y]) return false;
+            if (x < 0 || y < 0 || x >= board.xCurrLength || y >= board.yCurrLength
+                || visited[x, y]) return false;
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
@@ -82,7 +84,8 @@ namespace VirusesGame.Classes
                     if (j == 0 && i == 0) continue;
                     int xNeighbor = x + i;
                     int yNeighbor = y + j;
-                    if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
+                    if (xNeighbor < 0 || yNeighbor < 0
+                        || xNeighbor >= board.xCurrLength || yNeighbor >= board.yCurrLength) continue;
                     var neighbor = board[xNeighbor, yNeighbor];
                     if (neighbor.State == Symbols.nativeSymbol) return true;
                 }
@@ -95,10 +98,11 @@ namespace VirusesGame.Classes
                     if (j == 0 && i == 0) continue;
                     int xNeighbor = x + i;
                     int yNeighbor = y + j;
-                    if (xNeighbor < 0 || yNeighbor < 0 || xNeighbor > 9 || yNeighbor > 9) continue;
+                    if (xNeighbor < 0 || yNeighbor < 0
+                        || xNeighbor >= board.xCurrLength || yNeighbor >= board.yCurrLength) continue;
                     var neighbor = board[xNeighbor, yNeighbor];
-                    if (neighbor.State == Symbols.capturedSymbol 
-                        && CheckIsCellAvailable(board, xNeighbor, yNeighbor, visited)) return true ;
+                    if (neighbor.State == Symbols.capturedSymbol
+                        && CheckIsCellAvailable(board, xNeighbor, yNeighbor, visited)) return true;
                 }
             }
             return false;

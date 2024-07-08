@@ -21,6 +21,7 @@
 
             <VerticalStackLayout>
                 <Label
+                    x:Name="ResultLabel"
                     Text="ПОБЕДИЛ" 
                     FontSize="80"
                     FontFamily="Inkverse"

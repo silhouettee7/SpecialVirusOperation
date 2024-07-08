@@ -79,6 +79,9 @@
 	  <Compile Update="GamePage.xaml.cs">
 	    <DependentUpon>GamePage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="AskPopup.xaml.cs">
+	    <DependentUpon>AskPopup.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -97,7 +100,7 @@
 	  <MauiXaml Update="Resources\Styles\ButtonStyle.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="SurrenderPopup.xaml">
+	  <MauiXaml Update="AskPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="TutorialPage.xaml">

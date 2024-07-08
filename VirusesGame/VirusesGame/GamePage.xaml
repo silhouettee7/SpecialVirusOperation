@@ -62,27 +62,88 @@
                    
         </AbsoluteLayout>
 
+        <VerticalStackLayout
+            AbsoluteLayout.LayoutBounds="0.95, 0.45"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            Spacing="120">
+            
+            <HorizontalStackLayout
+                Spacing="10"
+                VerticalOptions="Start"
+                HorizontalOptions="Center">
+                <Image x:Name="star1" 
+                       Source="star.png"
+                       WidthRequest="100"
+                       HeightRequest="100"
+                       HorizontalOptions="Start"/>
 
-        <Image x:Name="star1"
-               Source="star.png"
-               WidthRequest="100"
-               HeightRequest="100"
-               AbsoluteLayout.LayoutBounds="0.8, 0.1"
-               AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                <Image x:Name="star2"
+                       Source="star.png"
+                       WidthRequest="100"
+                       HeightRequest="100"
+                       HorizontalOptions="Center"/>
+
+                <Image x:Name="star3"
+                       Source="star.png"
+                       WidthRequest="100"
+                       HeightRequest="100"
+                       HorizontalOptions="End"/>
+            </HorizontalStackLayout>
+            
+            <HorizontalStackLayout
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Spacing="50">
+                <ImageButton x:Name="InjectionButton"
+                             Source="injection_button.png"
+                             WidthRequest="100"
+                             HeightRequest="100"
+                             Clicked="OnInjectionButtonClicked"
+                             HorizontalOptions="Start"
+                             VerticalOptions="Center"/>
+
+                <ImageButton x:Name="ExpansionButton"
+                             Source="expansion_button.png"
+                             WidthRequest="100"
+                             HeightRequest="100"
+                             Clicked="OnExpansionButtonClicked"
+                             HorizontalOptions="End"
+                             VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                VerticalOptions="Center"
+                HorizontalOptions="End"
+                Spacing="10">
+                <Button Text="СДАТЬСЯ"
+                        BackgroundColor="#ff4b4b"
+                        FontFamily="Inkverse"
+                        WidthRequest="175" 
+                        HeightRequest="100" 
+                        CornerRadius="50"
+                        BorderColor="Black"
+                        FontSize="35"
+                        BorderWidth="2"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        Clicked="OnGiveUpButtonClicked"/>
+                
+                <Button Text="НИЧЬЯ"
+                        BackgroundColor="#00CC00"
+                        FontFamily="Inkverse"
+                        WidthRequest="175" 
+                        HeightRequest="100" 
+                        CornerRadius="50"
+                        BorderColor="Black"
+                        FontSize="35"
+                        BorderWidth="2"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        Clicked="OnTieButtonClicked"/>
+            </HorizontalStackLayout>
+            
+        </VerticalStackLayout>
         
-        <Image x:Name="star2"
-               Source="star.png"
-               WidthRequest="100"
-               HeightRequest="100"
-               AbsoluteLayout.LayoutBounds="0.88, 0.1"
-               AbsoluteLayout.LayoutFlags="PositionProportional"/>
-        
-        <Image x:Name="star3"
-               Source="star.png"
-               WidthRequest="100"
-               HeightRequest="100"
-               AbsoluteLayout.LayoutBounds="0.96, 0.1"
-               AbsoluteLayout.LayoutFlags="PositionProportional"/>
         
         <Button Text="ОТМЕНИТЬ"
                 Style="{StaticResource buttonStyle}"
@@ -96,43 +157,12 @@
                 AbsoluteLayout.LayoutBounds="0.5, 0.95"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 Clicked="OnConfirmButtonClicked"/>
-        
+
         <Button Text="ПРОПУСТИТЬ"
                 Style="{StaticResource buttonStyle}"
                 AbsoluteLayout.LayoutBounds="0.75, 0.95"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 Clicked="OnSkipButtonClicked"/>
-        
-        <Button Text="СДАТЬСЯ"
-                BackgroundColor="#ff4b4b"
-                FontFamily="Inkverse"
-                WidthRequest="175" 
-                HeightRequest="100" 
-                CornerRadius="50"
-                BorderColor="Black"
-                FontSize="35"
-                BorderWidth="2"
-                AbsoluteLayout.LayoutBounds="0.96, 0.95"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                Clicked="OnGiveUpButtonClicked"/>
-
-        <ImageButton x:Name="InjectionButton"
-                     Source="injection_button.png"
-                     WidthRequest="100"
-                     HeightRequest="100"
-                     Clicked="OnInjectionButtonClicked"
-                     
-                     AbsoluteLayout.LayoutBounds="0.88, 0.4"
-                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
-
-        <ImageButton x:Name="ExpansionButton"
-                     Source="expansion_button.png"
-                     WidthRequest="100"
-                     HeightRequest="100"
-                     Clicked="OnExpansionButtonClicked"
-                     
-                     AbsoluteLayout.LayoutBounds="0.88, 0.6"
-                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
     </AbsoluteLayout>
 </ContentPage>

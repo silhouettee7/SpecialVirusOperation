@@ -1,11 +1,12 @@
 using CommunityToolkit.Maui.Views;
 namespace VirusesGame;
 
-public partial class SurrenderPopup : Popup
+public partial class AskPopup : Popup
 {
-	public SurrenderPopup()
+	public AskPopup(string message)
 	{
         InitializeComponent();
+        MessageLabel.Text = message;
     }
 
     private async void OnYesButtonClicked(object? sender, EventArgs e)

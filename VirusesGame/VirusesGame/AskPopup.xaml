@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<mct:Popup x:Class="VirusesGame.SurrenderPopup"
+<mct:Popup x:Class="VirusesGame.AskPopup"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
@@ -18,7 +18,6 @@
                 x:Name="MessageLabel"
                 FontSize="27"
                 TextColor="Black"
-                Text="Вы уверены&#10;что хотите сдаться?"
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 FontFamily="Inkverse"/>

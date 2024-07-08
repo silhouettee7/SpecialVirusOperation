@@ -5,6 +5,7 @@
              BackgroundImageSource="bg_tutorial.png">
     <ContentPage.Resources>
         <ResourceDictionary>
+            
             <Style x:Key="buttonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="BackgroundColor" Value="#D9D9D9" />
@@ -16,6 +17,15 @@
                 <Setter Property="CornerRadius" Value="22"/>
                 <Setter Property="BorderWidth" Value="2"/>
             </Style>
+            
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="TextColor" Value="Black"/>
+            </Style>
+            
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -44,77 +54,72 @@
                WidthRequest="1000"
             HeightRequest="400"
 
-            BackgroundColor="#ECECEC"
+            BackgroundColor="#F8F8FF"
 
             CornerRadius="20"
             HasShadow="False">
             <ScrollView>
-                <VerticalStackLayout>
-                <Label Text="Играют в «войну вирусов» два игрока на доске 10 на 10 клеток, один крестиками, другой ноликами."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="Ходят поочерёдно. Начинают крестики. Каждый ход состоит из трёх отдельных последовательных ходов (назовём их «ходиками»)."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="Каждый «ходик» является либо размножением, либо убиванием. Размножение — это выставление своего символа в любую доступную пустую клетку доски, а убивание — это объявление убитым некоторого чужого символа, который находится на доступной клетке."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="Клетка считается доступной для крестиков, если она либо непосредственно соприкасается (по вертикали, горизонтали или диагонали) с живым крестиком, либо через цепочку убитых ноликов(но не через цепочку убитых крестиков!)."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="Аналогично определяются клетки, доступные для ноликов: либо непосредственно соприкасающиеся с одним из ноликов, либо через цепочку убитых крестиков."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="Убитые крестики обводятся кружком, убитые нолики закрашиваются."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="В начале игры в левом нижнем углу доски стоит крестик, а в правом верхнем - нолик."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="В любой момент игрок может отказаться от хода. Однако выполнение вместо полного хода лишь одного или двух «ходиков» запрещается, за исключением того случая, когда выполнить полный ход невозможно в принципе."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
-                    <Label Text="Запрещается:
-Ставить свой символ в уже занятую клетку.
-Убивать уже убитые символы противника."
-                       HorizontalTextAlignment="Start"
-                       VerticalTextAlignment="Center"
-                       FontFamily="Mateur"
-                       FontSize="Medium"
-                       Margin="5"
-                       TextColor="Black"/>
+                <VerticalStackLayout Spacing="10">
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Игрок управляет колонией вирусов. Цель игры - уничтожить все живые клетки соперника."/>
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Игра ведётся по ходам. Каждый ход состоит из трёх действий. Одно действие представляет собой либо “размножение”, либо “убийство”."/>
+                    
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Размножение: игрок ставит свой символ в незанятую клетку."/>
+                    <HorizontalStackLayout Spacing="40" HorizontalOptions="Center">
+                        <Image Source="tutorial_a1.png" HeightRequest="100" WidthRequest="200"/>
+                        <Image Source="tutorial_a2.png" HeightRequest="100" WidthRequest="200"/>
+                    </HorizontalStackLayout>
+                        
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Убийство: игрок объявляет убитым один ЖИВОЙ символ соперника."/>
+                    <HorizontalStackLayout Spacing="40" HorizontalOptions="Center">
+                        <Image Source="tutorial_a3.png" HeightRequest="100" WidthRequest="200"/>
+                        <Image Source="tutorial_a4.png" HeightRequest="100" WidthRequest="200"/>
+                    </HorizontalStackLayout>
+
+                    <Label Style="{StaticResource labelStyle}"
+                           Text=
+"Ставить свой символ или убивать чужой можно только в доступных клетках."/>
+                    <Label Style="{StaticResource labelStyle}"
+                           Text ="Клетка считается доступной, если она соседствует со своим-живым символом напрямую (вертикали, горизонтали или диагонали) или через непрерывную цепочку вражеских-убитых"/>
+                    <HorizontalStackLayout Spacing="40" HorizontalOptions="Center">
+                        <Image Source="tutorial_b1.png" HeightRequest="250" WidthRequest="250"/>
+                        <Image Source="tutorial_b2.png" HeightRequest="250" WidthRequest="250"/>
+                        <Image Source="tutorial_b3.png" HeightRequest="250" WidthRequest="250"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="До подтверждения хода каждое действие можно отменить."/>
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="В процессе игры допускается пропускать свой ход полностью, но не разрешается пропускать действие. Игрок либо не делает ни одного действия, либо делает все три."/>
+                    
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Игроку на 1 игру доступны “гаджеты”: 3 “сыворотки” и 1 “расширение поля”"/>
+                    <HorizontalStackLayout Spacing="40" HorizontalOptions="Center">
+                        <Image Source="injection_button.png" HeightRequest="125" WidthRequest="125"/>
+                        <Image Source="expansion_button.png" HeightRequest="125" WidthRequest="125"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Сыворотка: можно применить в любое место на карте. Если использовано на клетку с мёртвым символом, то уничтожает его и соседние по вертикали и горизонтали мёртвые символы той же стороны."/>
+                    <HorizontalStackLayout Spacing="40" HorizontalOptions="Center">
+                        <Image Source="tutorial_c1.png" HeightRequest="250" WidthRequest="250"/>
+                        <Image Source="tutorial_c2.png" HeightRequest="250" WidthRequest="250"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Расширение поля: случайным образом добавляет пустой столбец или строку."/>
+                    <HorizontalStackLayout Spacing="40" HorizontalOptions="Center">
+                        <Image Source="tutorial_e1.png" HeightRequest="250" WidthRequest="250"/>
+                        <Image Source="tutorial_e2.png" HeightRequest="250" WidthRequest="250"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Гаджеты применяются до совершения действий и их использование нельзя отменить."/>
+                    <Label Style="{StaticResource labelStyle}"
+                           Text="Побеждает игрок, который полностью уничтожает колонию противника. Если это не удаётся ни одному из игроков, то игра заканчивается вничью."/>
                 </VerticalStackLayout>
             </ScrollView>
         </Frame>

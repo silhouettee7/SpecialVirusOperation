@@ -79,6 +79,10 @@ public partial class GamePage : ContentPage
     {
         await DisplaySurrenderPopup();
     }
+    private async void OnTieButtonClicked(object sender, EventArgs e)
+    {
+        await DisplayTiePopup();
+    }
     private async void OnImageButtonClicked(object sender, EventArgs e)
     {
         var button = sender as ImageButton;
@@ -261,7 +265,7 @@ public partial class GamePage : ContentPage
     }
     public async Task DisplaySurrenderPopup()
     {
-        var popup = new SurrenderPopup();
+        var popup = new AskPopup("Вы уверены\nчто хотите сдаться?");
         var result = await this.ShowPopupAsync(popup, CancellationToken.None);
 
         if (result is bool boolResult)
@@ -269,6 +273,19 @@ public partial class GamePage : ContentPage
             if (boolResult)
             {
                 await Navigation.PushAsync(new CongratulationPage(secondPlayer.Name));
+            }
+        }
+    }
+    public async Task DisplayTiePopup()
+    {
+        var popup = new AskPopup("Вы согласны на ничью?");
+        var result = await this.ShowPopupAsync(popup, CancellationToken.None);
+
+        if (result is bool boolResult)
+        {
+            if (boolResult)
+            {
+                await Navigation.PushAsync(new CongratulationPage("", true));
             }
         }
     }
@@ -290,9 +307,6 @@ public partial class GamePage : ContentPage
         await DisplayNotification("Вы использовали расширение!");
     }
 
-    private async void OnTieButtonClicked(object sender, EventArgs e)
-    {
-        await DisplayNotification("Ничья хуле");
-    }
+    
 
 }

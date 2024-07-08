@@ -2,11 +2,21 @@ namespace VirusesGame;
 
 public partial class CongratulationPage : ContentPage
 {
-	public CongratulationPage(string winPlayer)
+	public CongratulationPage(string winPlayer, bool tieFlag = false)
 	{
 		InitializeComponent();
-        CongratulationLabel.Text = winPlayer.ToUpper();
-        CongratulationLabel.TextColor = winPlayer == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0) : new Color(181, 0, 0);
+        if (tieFlag)
+        {
+            CongratulationLabel.Text = "НИЧЬЯ";
+            CongratulationLabel.TextColor = Colors.BlueViolet;
+            ResultLabel.Text = "Нет победителя";
+        }
+        else
+        {
+            CongratulationLabel.Text = winPlayer.ToUpper();
+            CongratulationLabel.TextColor = winPlayer == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0) : new Color(181, 0, 0);
+        }
+
     }
 
     private async void OnMainMenuButtonClicked(object sender, EventArgs e)

@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Devices.Sensors;
+using Microsoft.Maui.Layouts;
 using System.Xml.Serialization;
 using VirusesGame.Classes;
 using VirusesGame.Enums;
@@ -22,55 +23,54 @@ public partial class GamePage : ContentPage
     }
     private async void BuildBoardButtons()
     {
-        boardButtons = new ImageButton[10, 10];
+        boardButtons = new ImageButton[12, 12];
         InitializeBoardButtons();
-        board = new Board();
+        board = new Board(12, 12);
         board.Initialize();
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
-            {               
+            {
                 await Task.Run(() =>
                 {
-                    boardButtons[i, j].Clicked += OnImageButtonClicked!;
                     Dispatcher.DispatchAsync(() =>
-                        boardButtons[i, j].Source = LoadImages(i,j));
+                        boardButtons[i, j].Source = LoadImages(i, j));
                 });
             }
         }
     }
 
-    private async void InitializeBoardButtons()
+    private void InitializeBoardButtons()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 12; i++)
         {
-            BoardGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
+            BoardGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(50) });
         }
 
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < 12; j++)
         {
-            BoardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
+            BoardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(50) });
         }
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 12; i++)
         {
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < 12; j++)
             {
                 boardButtons[i, j] = new ImageButton();
                 boardButtons[i, j].AutomationId = $"{i},{j}";
                 boardButtons[i, j].BorderColor = Colors.Black;
                 boardButtons[i, j].BorderWidth = 1;
-                BoardGrid.Add(boardButtons[i, j], i, j);
+                boardButtons[i, j].Clicked += OnImageButtonClicked!;
+                boardButtons[i, j].BackgroundColor = Colors.White;
+                if (i < 10 && j < 10) BoardGrid.Add(boardButtons[i, j], j, i);
             }
         }
-
-        await Task.Delay(100);
     }
 
     private void InitializePlayers()
     {
-        var player1 = new Player(State.Cross, State.FilledZero, "КРАСНЫЙ");
-        var player2 = new Player(State.Zero, State.СircledСross,"ЗЕЛЕНЫЙ");
+        var player1 = new Player(State.Cross, State.FilledZero, "ГЉГђГЂГ‘ГЌГ›Г‰");
+        var player2 = new Player(State.Zero, State.Г‘ircledГ‘ross,"Г‡Г…Г‹Г…ГЌГ›Г‰");
         leadingPlayer = player1;
         secondPlayer = player2;
     }
@@ -90,7 +90,7 @@ public partial class GamePage : ContentPage
         {
             var loctionArr = FindLocationImageButton(button);
             (int x, int y) location = (loctionArr[0], loctionArr[1]);
-            var visited = new bool[10, 10];
+            var visited = new bool[board.xCurrLength, board.yCurrLength];
             if (injectionSelectionMode)
             {
                 if (board[location.x, location.y].State == State.Empty
@@ -127,7 +127,7 @@ public partial class GamePage : ContentPage
                     && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
                 {
                     leadingPlayer.Multiply(board, location.x, location.y);
-                    leadingPlayer.AllLivingCells.Add((location.x, location.y));
+                    leadingPlayer.IncrementLivingCells();
                     SetActiveStarsImages();
                     button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("circle.png")
                         : ImageSource.FromFile("cross.png");
@@ -136,12 +136,12 @@ public partial class GamePage : ContentPage
                     && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
                 {
                     leadingPlayer.Kill(board, location.x, location.y);
-                    secondPlayer.AllLivingCells.Remove((location.x, location.y));
+                    secondPlayer.DecrementLivingCells();
                     SetActiveStarsImages();
                     button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
                         : ImageSource.FromFile("circle_dead.png");
                 }
-                if (secondPlayer.AllLivingCells.Count == 0)
+                if (secondPlayer.AllLivingCellsCount == 0)
                 {
                     await Task.Delay(500);
                     await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
@@ -160,7 +160,7 @@ public partial class GamePage : ContentPage
     {
         if (injectionSelectionMode)
         {
-            await DisplayNotification("Сначала используйте сыворотку");
+            await DisplayNotification("Г‘Г­Г Г·Г Г«Г  ГЁГ±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ Г±Г»ГўГ®Г°Г®ГІГЄГі");
         }
         else if (leadingPlayer.CountMoves == 3)
         {
@@ -171,7 +171,7 @@ public partial class GamePage : ContentPage
         }
         else
         {
-            await DisplayNotification("Вы сделали меньше 3 ходов.\nОтмените действие или пропустите ход");
+            await DisplayNotification("Г‚Г» Г±Г¤ГҐГ«Г Г«ГЁ Г¬ГҐГ­ГјГёГҐ 3 ГµГ®Г¤Г®Гў.\nГЋГІГ¬ГҐГ­ГЁГІГҐ Г¤ГҐГ©Г±ГІГўГЁГҐ ГЁГ«ГЁ ГЇГ°Г®ГЇГіГ±ГІГЁГІГҐ ГµГ®Г¤");
         }
     }
 
@@ -179,14 +179,14 @@ public partial class GamePage : ContentPage
     {
         if (injectionSelectionMode)
         {
-            await DisplayNotification("Сначала используйте сыворотку");
+            await DisplayNotification("Г‘Г­Г Г·Г Г«Г  ГЁГ±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ Г±Г»ГўГ®Г°Г®ГІГЄГі");
         }
         else
         {
             switch (leadingPlayer.CountMoves)
             {
                 case 0:
-                    await DisplayNotification("Вы не сделали ни одного хода,\nпоэтому не можете отменить его");
+                    await DisplayNotification("Г‚Г» Г­ГҐ Г±Г¤ГҐГ«Г Г«ГЁ Г­ГЁ Г®Г¤Г­Г®ГЈГ® ГµГ®Г¤Г ,\nГЇГ®ГЅГІГ®Г¬Гі Г­ГҐ Г¬Г®Г¦ГҐГІГҐ Г®ГІГ¬ГҐГ­ГЁГІГј ГҐГЈГ®");
                     return;
                 case 1:
                     star1.Source = ImageSource.FromFile("star.png");
@@ -198,7 +198,7 @@ public partial class GamePage : ContentPage
                     star3.Source = ImageSource.FromFile("star.png");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("Превышено количество допустим ходов");
+                    throw new ArgumentOutOfRangeException("ГЏГ°ГҐГўГ»ГёГҐГ­Г® ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® Г¤Г®ГЇГіГ±ГІГЁГ¬ ГµГ®Г¤Г®Гў");
             }
             var loc = leadingPlayer.CancelMove(board);
             boardButtons[loc.x, loc.y].Source = LoadImages(loc.x, loc.y);
@@ -209,7 +209,7 @@ public partial class GamePage : ContentPage
     {
         if (injectionSelectionMode)
         {
-            await DisplayNotification("Сначала используйте сыворотку");
+            await DisplayNotification("Г‘Г­Г Г·Г Г«Г  ГЁГ±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ Г±Г»ГўГ®Г°Г®ГІГЄГі");
         }
         else if (leadingPlayer.CountMoves == 0)
         {
@@ -217,11 +217,11 @@ public partial class GamePage : ContentPage
         }
         else if (leadingPlayer.CountMoves == 3)
         {
-            await DisplayNotification("Вы сделали 3 хода\nнажмите кнопку подвтердить");
+            await DisplayNotification("Г‚Г» Г±Г¤ГҐГ«Г Г«ГЁ 3 ГµГ®Г¤Г \nГ­Г Г¦Г¬ГЁГІГҐ ГЄГ­Г®ГЇГЄГі ГЇГ®Г¤ГўГІГҐГ°Г¤ГЁГІГј");
         }
         else
         {
-            await DisplayNotification("Вы сделали меньше 3 ходов.\nОтмените действие или сделайте 3 хода");
+            await DisplayNotification("Г‚Г» Г±Г¤ГҐГ«Г Г«ГЁ Г¬ГҐГ­ГјГёГҐ 3 ГµГ®Г¤Г®Гў.\nГЋГІГ¬ГҐГ­ГЁГІГҐ Г¤ГҐГ©Г±ГІГўГЁГҐ ГЁГ«ГЁ Г±Г¤ГҐГ«Г Г©ГІГҐ 3 ГµГ®Г¤Г ");
         }
     }
     private void ReplacePlayer()
@@ -231,13 +231,16 @@ public partial class GamePage : ContentPage
         leadingPlayer = secondPlayer;
         secondPlayer = tempPlayer;
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
-        LeadingPlayer.TextColor = leadingPlayer.Name == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0): new Color(181,0,0);
-        InjectionCount.Text = $": {leadingPlayer.InjectionsLeft}";
+        LeadingPlayer.TextColor = leadingPlayer.Name == "Г‡Г…Г‹Г…ГЌГ›Г‰" ? new Color(23, 113, 0): new Color(181,0,0);
+        InjectionCount.Text = $"ГЋГ±ГІГ Г«Г®Г±Гј Г±Г»ГўГ®Г°Г®ГІГ®ГЄ: {leadingPlayer.InjectionsLeft}";
+        ExpansionCount.Text = $"ГЋГ±ГІГ Г«Г®Г±Гј Г°Г Г±ГёГЁГ°ГҐГ­ГЁГ©: {(leadingPlayer.IsExpansionDone ? 0: 1)}";
     }
     private ImageSource LoadImages(int x, int y)
     {
         return board[x, y].State == State.Empty ? ImageSource.FromFile("cell.png")
             : board[x, y].State == State.Zero ? ImageSource.FromFile("circle.png")
+            : board[x, y].State == State.Г‘ircledГ‘ross ? ImageSource.FromFile("cross_dead.png")
+            : board[x, y].State == State.FilledZero ? ImageSource.FromFile("circle_dead.png")
             : ImageSource.FromFile("cross.png");
     }
     private void SetActiveStarsImages()
@@ -254,7 +257,7 @@ public partial class GamePage : ContentPage
                 star3.Source = ImageSource.FromFile("star_active.png");
                 break;
             default:
-                throw new ArgumentOutOfRangeException("Превышено кол-во ходов или не сделан ни один");
+                throw new ArgumentOutOfRangeException("ГЏГ°ГҐГўГ»ГёГҐГ­Г® ГЄГ®Г«-ГўГ® ГµГ®Г¤Г®Гў ГЁГ«ГЁ Г­ГҐ Г±Г¤ГҐГ«Г Г­ Г­ГЁ Г®Г¤ГЁГ­");
         }
     }
     
@@ -262,10 +265,11 @@ public partial class GamePage : ContentPage
     {
         var popup = new NotificationPopup(message);
         await this.ShowPopupAsync(popup);
+        await Task.Delay(1000);
     }
     public async Task DisplaySurrenderPopup()
     {
-        var popup = new AskPopup("Вы уверены\nчто хотите сдаться?");
+        var popup = new AskPopup("Г‚Г» ГіГўГҐГ°ГҐГ­Г»\nГ·ГІГ® ГµГ®ГІГЁГІГҐ Г±Г¤Г ГІГјГ±Гї?");
         var result = await this.ShowPopupAsync(popup, CancellationToken.None);
 
         if (result is bool boolResult)
@@ -278,7 +282,7 @@ public partial class GamePage : ContentPage
     }
     public async Task DisplayTiePopup()
     {
-        var popup = new AskPopup("Вы согласны на ничью?");
+        var popup = new AskPopup("Г‚Г» Г±Г®ГЈГ«Г Г±Г­Г» Г­Г  Г­ГЁГ·ГјГѕ?");
         var result = await this.ShowPopupAsync(popup, CancellationToken.None);
 
         if (result is bool boolResult)
@@ -293,9 +297,9 @@ public partial class GamePage : ContentPage
     private async void OnInjectionButtonClicked(object sender, EventArgs e)
     {
         if (leadingPlayer.CountMoves > 0)
-            await DisplayNotification("Сыворотку можно использовать только до начала хода");
+            await DisplayNotification("Г‘Г»ГўГ®Г°Г®ГІГЄГі Г¬Г®Г¦Г­Г® ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ ГІГј ГІГ®Г«ГјГЄГ® Г¤Г® Г­Г Г·Г Г«Г  ГµГ®Г¤Г ");
         else if (leadingPlayer.InjectionsLeft == 0)
-            await DisplayNotification("У вас не осталось сыворотки");
+            await DisplayNotification("Г“ ГўГ Г± Г­ГҐ Г®Г±ГІГ Г«Г®Г±Гј Г±Г»ГўГ®Г°Г®ГІГЄГЁ");
         else
         {
             injectionSelectionMode = !injectionSelectionMode;
@@ -304,7 +308,44 @@ public partial class GamePage : ContentPage
 
     private async void OnExpansionButtonClicked(object sender, EventArgs e)
     {
-        await DisplayNotification("Вы использовали расширение!");
+        if (leadingPlayer.IsExpansionDone) return;
+        var random = new Random();
+        var rowOrColumn = random.Next(0, 2);
+        var positionInBoard = random.Next(0, rowOrColumn == 0 ? board.xCurrLength + 1 : board.yCurrLength + 1);
+        int xStart = rowOrColumn == 0 ? positionInBoard : 0;
+        int yStart = rowOrColumn == 1 ? positionInBoard : 0;
+        var list = new State[board.yCurrLength];
+        var notification = DisplayNotification("Г‚Г» ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ Г«ГЁ Г°Г Г±ГёГЁГ°ГҐГ­ГЁГҐ!");
+        for (int i = xStart; i < board.xCurrLength + (rowOrColumn == 1 ? 0 : 1); i++)
+        {
+            var tempPrevState = State.Empty;
+            for (int j = yStart; j < board.yCurrLength + (rowOrColumn == 0 ? 0 : 1); j++)
+            {
+                if (rowOrColumn == 1)
+                {
+                    var tempCurrState = board[i, j].State;
+                    board[i, j].State = tempPrevState;
+                    tempPrevState = tempCurrState;
+                    if (j == board.yCurrLength) BoardGrid.Add(boardButtons[i, j], j, i);
+                }
+                else
+                {
+                    var tempCurrState = board[i, j].State;
+                    board[i, j].State = list[j];
+                    list[j] = tempCurrState;
+                    if (i == board.xCurrLength) BoardGrid.Add(boardButtons[i, j], j, i);
+                }
+
+                await Task.Run(() => Dispatcher.DispatchAsync(() =>
+                        boardButtons[i, j].Source = LoadImages(i, j)));
+
+            }
+        }
+        if (rowOrColumn == 0) board.xCurrLength++;
+        else board.yCurrLength++;
+        leadingPlayer.IsExpansionDone = true;
+        ExpansionCount.Text = $"ГЋГ±ГІГ Г«Г®Г±Гј Г°Г Г±ГёГЁГ°ГҐГ­ГЁГ©: 0";
+        await notification;
     }
 
     

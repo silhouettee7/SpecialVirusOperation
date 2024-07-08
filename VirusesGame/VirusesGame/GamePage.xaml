@@ -82,7 +82,7 @@
 
                 <Label x:Name="ExpansionCount"
                        FontFamily="Inkverse"
-                       Text=": 337"
+                       Text=": 1"
                        FontSize="30"
                        TextColor="Black"
                        HorizontalTextAlignment="Center"

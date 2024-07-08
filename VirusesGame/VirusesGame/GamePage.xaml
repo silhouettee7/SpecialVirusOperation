@@ -30,7 +30,7 @@
                    FontSize="35"
                    TextColor="Black"
                 
-                   AbsoluteLayout.LayoutBounds="0.5, 0.3"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.1"
                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
             
             <Label x:Name="LeadingPlayer" 
@@ -39,27 +39,56 @@
                    FontSize="50"
                    TextColor="#b50000"
                    
-                   AbsoluteLayout.LayoutBounds="0.5,0.5"
+                   AbsoluteLayout.LayoutBounds="0.5,0.3"
                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
-            
-            <Label x:Name="InjectionCount"
-                   FontFamily="Inkverse"
-                   Text="Осталось сывороток: 3"
-                   FontSize="30"
-                   TextColor="Black"
-                   
-                   AbsoluteLayout.LayoutBounds="0.5, 0.7"
-                   AbsoluteLayout.LayoutFlags="PositionProportional"/>
-            
-            <Label x:Name="ExpansionCount"
-                   FontFamily="Inkverse"
-                   Text="колво расширений: 337"
-                   FontSize="30"
-                   TextColor="Black"
 
-                   AbsoluteLayout.LayoutBounds="0.5, 0.9"
+            <Label Text="Сыворотки"
+                   FontFamily="Inkverse"
+                   FontSize="25"
+                   TextColor="Black"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.6"
                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
-                   
+
+            <HorizontalStackLayout
+                Spacing="5"
+                AbsoluteLayout.LayoutBounds="0.5, 0.7"
+                AbsoluteLayout.LayoutFlags="PositionProportional">
+
+                <Image Source="injection.png" VerticalOptions="Center" HeightRequest="50"/>
+
+                <Label x:Name="InjectionCount"
+                       FontFamily="Inkverse"
+                       Text=": 3"
+                       FontSize="30"
+                       TextColor="Black"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center"/>
+
+            </HorizontalStackLayout>
+
+            <Label Text="Расширения"
+                   FontFamily="Inkverse"
+                   FontSize="25"
+                   TextColor="Black"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.8"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+            <HorizontalStackLayout
+                Spacing="5"
+                AbsoluteLayout.LayoutBounds="0.5, 0.9"
+                AbsoluteLayout.LayoutFlags="PositionProportional">
+
+                <Image Source="expansion.png" VerticalOptions="Center" HeightRequest="50"/>
+
+                <Label x:Name="ExpansionCount"
+                       FontFamily="Inkverse"
+                       Text=": 337"
+                       FontSize="30"
+                       TextColor="Black"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center"/>
+
+            </HorizontalStackLayout>
         </AbsoluteLayout>
 
         <VerticalStackLayout

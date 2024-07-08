@@ -98,14 +98,14 @@ public partial class GamePage : ContentPage
                             || board[location.x, location.y].State == secondPlayer.Symbols.nativeSymbol)
                 {
                     leadingPlayer.DecreaseNumberOfInjections();
-                    InjectionCount.Text = $"Осталось сывороток: {leadingPlayer.InjectionsLeft}";
+                    InjectionCount.Text = $": {leadingPlayer.InjectionsLeft}";
                     injectionSelectionMode = !injectionSelectionMode;
                 }
                 if (board[location.x, location.y].State == leadingPlayer.Symbols.capturedSymbol
                             || board[location.x, location.y].State == secondPlayer.Symbols.capturedSymbol)
                 {
                     leadingPlayer.UseInjection(board, location.x, location.y);
-                    InjectionCount.Text = $"Осталось сывороток: {leadingPlayer.InjectionsLeft}";
+                    InjectionCount.Text = $": {leadingPlayer.InjectionsLeft}";
                     foreach (var nearbyCoord in nearbyCellsCoords)
                     {
                         if (location.x + nearbyCoord.Item1 < 0
@@ -232,7 +232,7 @@ public partial class GamePage : ContentPage
         secondPlayer = tempPlayer;
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
         LeadingPlayer.TextColor = leadingPlayer.Name == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0): new Color(181,0,0);
-        InjectionCount.Text = $"Осталось сывороток: {leadingPlayer.InjectionsLeft}";
+        InjectionCount.Text = $": {leadingPlayer.InjectionsLeft}";
     }
     private ImageSource LoadImages(int x, int y)
     {

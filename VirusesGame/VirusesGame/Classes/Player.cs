@@ -8,7 +8,7 @@ namespace VirusesGame.Classes
         private Stack<Tuple<int, int>> moves;
         private static ValueTuple<int, int>[] nearbyCellsCoords = new ValueTuple<int, int>[] { (1, 0), (0, 1), (0, -1), (-1, 0)};
         public int InjectionsLeft { get; private set; } = 3;
-        public HashSet<ValueTuple<int, int>> AllLivingCells { get; }
+        public int AllLivingCellsCount { get; private set; } = 1;
         public (State nativeSymbol, State capturedSymbol) Symbols { get; }
         public string Name { get; }
         public int CountMoves { get; private set; }
@@ -18,10 +18,6 @@ namespace VirusesGame.Classes
             Symbols = (nativeSymbol,capturedSymbol);
             Name = name;
             moves = new Stack<Tuple<int, int>>();
-            AllLivingCells = new HashSet<(int, int)>()
-            {
-                nativeSymbol == State.Zero ? (0,9) : (9,0)
-            };
         }
         public void UseInjection(Board board, int x, int y)
         {
@@ -117,6 +113,16 @@ namespace VirusesGame.Classes
         public void DecreaseNumberOfInjections()
         {
             InjectionsLeft--;
+        }
+
+        public void IncrementLivingCells()
+        {
+            AllLivingCellsCount++;
+        }
+
+        public void DecrementLivingCells()
+        {
+            AllLivingCellsCount--;
         }
     }
 }

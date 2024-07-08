@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Devices.Sensors;
+using Microsoft.Maui.Layouts;
 using System.Xml.Serialization;
 using VirusesGame.Classes;
 using VirusesGame.Enums;
@@ -122,7 +123,7 @@ public partial class GamePage : ContentPage
                     && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
                 {
                     leadingPlayer.Multiply(board, location.x, location.y);
-                    leadingPlayer.AllLivingCells.Add((location.x, location.y));
+                    leadingPlayer.IncrementLivingCells();
                     SetActiveStarsImages();
                     button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("circle.png")
                         : ImageSource.FromFile("cross.png");
@@ -131,12 +132,12 @@ public partial class GamePage : ContentPage
                     && leadingPlayer.CheckIsCellAvailable(board, location.x, location.y, visited))
                 {
                     leadingPlayer.Kill(board, location.x, location.y);
-                    secondPlayer.AllLivingCells.Remove((location.x, location.y));
+                    secondPlayer.DecrementLivingCells();
                     SetActiveStarsImages();
                     button.Source = leadingPlayer.Symbols.nativeSymbol == State.Zero ? ImageSource.FromFile("cross_dead.png")
                         : ImageSource.FromFile("circle_dead.png");
                 }
-                if (secondPlayer.AllLivingCells.Count == 0)
+                if (secondPlayer.AllLivingCellsCount == 0)
                 {
                     await Task.Delay(500);
                     await Navigation.PushAsync(new CongratulationPage(leadingPlayer.Name));
@@ -228,6 +229,7 @@ public partial class GamePage : ContentPage
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
         LeadingPlayer.TextColor = leadingPlayer.Name == "ЗЕЛЕНЫЙ" ? new Color(23, 113, 0): new Color(181,0,0);
         InjectionCount.Text = $"Осталось сывороток: {leadingPlayer.InjectionsLeft}";
+        ExpansionCount.Text = $"Осталось расширений: {(leadingPlayer.IsExpansionDone ? 0: 1)}";
     }
     private ImageSource LoadImages(int x, int y)
     {
@@ -325,6 +327,7 @@ public partial class GamePage : ContentPage
         if (rowOrColumn == 0) board.xCurrLength++;
         else board.yCurrLength++;
         leadingPlayer.IsExpansionDone = true;
+        ExpansionCount.Text = $"Осталось расширений: 0";
         await notification;
     }
 

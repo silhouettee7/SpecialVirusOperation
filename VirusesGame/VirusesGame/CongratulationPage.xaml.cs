@@ -14,7 +14,7 @@ public partial class CongratulationPage : ContentPage
         else
         {
             CongratulationLabel.Text = winPlayer.ToUpper();
-            CongratulationLabel.TextColor = winPlayer == "гекемши" ? new Color(23, 113, 0) : new Color(181, 0, 0);
+            CongratulationLabel.TextColor = winPlayer == "гек╗мши" ? new Color(23, 113, 0) : new Color(181, 0, 0);
         }
 
     }

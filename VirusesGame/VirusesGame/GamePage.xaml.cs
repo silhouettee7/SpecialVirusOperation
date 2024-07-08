@@ -69,8 +69,8 @@ public partial class GamePage : ContentPage
 
     private void InitializePlayers()
     {
-        var player1 = new Player(State.Cross, State.FilledZero, "ÊÐÀÑÍÛÉ");
-        var player2 = new Player(State.Zero, State.ÑircledÑross,"ÇÅËÅÍÛÉ");
+        var player1 = new Player(State.Cross, State.FilledZero, "КРАСНЫЙ");
+        var player2 = new Player(State.Zero, State.СircledСross,"ЗЕЛЁНЫЙ");
         leadingPlayer = player1;
         secondPlayer = player2;
     }
@@ -160,7 +160,7 @@ public partial class GamePage : ContentPage
     {
         if (injectionSelectionMode)
         {
-            await DisplayNotification("Ñíà÷àëà èñïîëüçóéòå ñûâîðîòêó");
+            await DisplayNotification("Сначала используйте сыворотку");
         }
         else if (leadingPlayer.CountMoves == 3)
         {
@@ -171,7 +171,7 @@ public partial class GamePage : ContentPage
         }
         else
         {
-            await DisplayNotification("Âû ñäåëàëè ìåíüøå 3 õîäîâ.\nÎòìåíèòå äåéñòâèå èëè ïðîïóñòèòå õîä");
+            await DisplayNotification("Вы сделали меньше 3 ходов.\nОтмените действие или пропустите ход");
         }
     }
 
@@ -179,14 +179,14 @@ public partial class GamePage : ContentPage
     {
         if (injectionSelectionMode)
         {
-            await DisplayNotification("Ñíà÷àëà èñïîëüçóéòå ñûâîðîòêó");
+            await DisplayNotification("Сначала используйте сыворотку");
         }
         else
         {
             switch (leadingPlayer.CountMoves)
             {
                 case 0:
-                    await DisplayNotification("Âû íå ñäåëàëè íè îäíîãî õîäà,\nïîýòîìó íå ìîæåòå îòìåíèòü åãî");
+                    await DisplayNotification("Вы не сделали ни одного хода,\nпоэтому не можете отменить его");
                     return;
                 case 1:
                     star1.Source = ImageSource.FromFile("star.png");
@@ -198,7 +198,7 @@ public partial class GamePage : ContentPage
                     star3.Source = ImageSource.FromFile("star.png");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("Ïðåâûøåíî êîëè÷åñòâî äîïóñòèì õîäîâ");
+                    throw new ArgumentOutOfRangeException("Превышено количество допустимых ходов");
             }
             var loc = leadingPlayer.CancelMove(board);
             boardButtons[loc.x, loc.y].Source = LoadImages(loc.x, loc.y);
@@ -209,7 +209,7 @@ public partial class GamePage : ContentPage
     {
         if (injectionSelectionMode)
         {
-            await DisplayNotification("Ñíà÷àëà èñïîëüçóéòå ñûâîðîòêó");
+            await DisplayNotification("Сначала используйте сыворотку");
         }
         else if (leadingPlayer.CountMoves == 0)
         {
@@ -217,11 +217,11 @@ public partial class GamePage : ContentPage
         }
         else if (leadingPlayer.CountMoves == 3)
         {
-            await DisplayNotification("Âû ñäåëàëè 3 õîäà\níàæìèòå êíîïêó ïîäâòåðäèòü");
+            await DisplayNotification("Вы сделали 3 хода\nнажмите кнопку подтвердить");
         }
         else
         {
-            await DisplayNotification("Âû ñäåëàëè ìåíüøå 3 õîäîâ.\nÎòìåíèòå äåéñòâèå èëè ñäåëàéòå 3 õîäà");
+            await DisplayNotification("Вы сделали меньше 3 ходов.\nОтмените действие или сделайте 3 хода");
         }
     }
     private void ReplacePlayer()
@@ -231,15 +231,15 @@ public partial class GamePage : ContentPage
         leadingPlayer = secondPlayer;
         secondPlayer = tempPlayer;
         LeadingPlayer.Text = leadingPlayer.Name.ToUpper();
-        LeadingPlayer.TextColor = leadingPlayer.Name == "ÇÅËÅÍÛÉ" ? new Color(23, 113, 0): new Color(181,0,0);
-        InjectionCount.Text = $"Îñòàëîñü ñûâîðîòîê: {leadingPlayer.InjectionsLeft}";
-        ExpansionCount.Text = $"Îñòàëîñü ðàñøèðåíèé: {(leadingPlayer.IsExpansionDone ? 0: 1)}";
+        LeadingPlayer.TextColor = leadingPlayer.Name == "ЗЕЛЁНЫЙ" ? new Color(23, 113, 0): new Color(181,0,0);
+        InjectionCount.Text = $": {leadingPlayer.InjectionsLeft}";
+        ExpansionCount.Text = $": {(leadingPlayer.IsExpansionDone ? 0: 1)}";
     }
     private ImageSource LoadImages(int x, int y)
     {
         return board[x, y].State == State.Empty ? ImageSource.FromFile("cell.png")
             : board[x, y].State == State.Zero ? ImageSource.FromFile("circle.png")
-            : board[x, y].State == State.ÑircledÑross ? ImageSource.FromFile("cross_dead.png")
+            : board[x, y].State == State.СircledСross ? ImageSource.FromFile("cross_dead.png")
             : board[x, y].State == State.FilledZero ? ImageSource.FromFile("circle_dead.png")
             : ImageSource.FromFile("cross.png");
     }
@@ -257,7 +257,7 @@ public partial class GamePage : ContentPage
                 star3.Source = ImageSource.FromFile("star_active.png");
                 break;
             default:
-                throw new ArgumentOutOfRangeException("Ïðåâûøåíî êîë-âî õîäîâ èëè íå ñäåëàí íè îäèí");
+                throw new ArgumentOutOfRangeException("Превышено кол-во ходов или не сделан ни один ход");
         }
     }
     
@@ -269,7 +269,7 @@ public partial class GamePage : ContentPage
     }
     public async Task DisplaySurrenderPopup()
     {
-        var popup = new AskPopup("Âû óâåðåíû\n÷òî õîòèòå ñäàòüñÿ?");
+        var popup = new AskPopup("Вы уверены\nчто хотите сдаться?");
         var result = await this.ShowPopupAsync(popup, CancellationToken.None);
 
         if (result is bool boolResult)
@@ -282,7 +282,7 @@ public partial class GamePage : ContentPage
     }
     public async Task DisplayTiePopup()
     {
-        var popup = new AskPopup("Âû ñîãëàñíû íà íè÷üþ?");
+        var popup = new AskPopup("Вы согласны на ничью");
         var result = await this.ShowPopupAsync(popup, CancellationToken.None);
 
         if (result is bool boolResult)
@@ -297,9 +297,9 @@ public partial class GamePage : ContentPage
     private async void OnInjectionButtonClicked(object sender, EventArgs e)
     {
         if (leadingPlayer.CountMoves > 0)
-            await DisplayNotification("Ñûâîðîòêó ìîæíî èñïîëüçîâàòü òîëüêî äî íà÷àëà õîäà");
+            await DisplayNotification("Сыворотку можно использовать только до начала хода");
         else if (leadingPlayer.InjectionsLeft == 0)
-            await DisplayNotification("Ó âàñ íå îñòàëîñü ñûâîðîòêè");
+            await DisplayNotification("У вас не осталось сывороток");
         else
         {
             injectionSelectionMode = !injectionSelectionMode;
@@ -315,7 +315,7 @@ public partial class GamePage : ContentPage
         int xStart = rowOrColumn == 0 ? positionInBoard : 0;
         int yStart = rowOrColumn == 1 ? positionInBoard : 0;
         var list = new State[board.yCurrLength];
-        var notification = DisplayNotification("Âû èñïîëüçîâàëè ðàñøèðåíèå!");
+        var notification = DisplayNotification("Вы использовали расширение!");
         for (int i = xStart; i < board.xCurrLength + (rowOrColumn == 1 ? 0 : 1); i++)
         {
             var tempPrevState = State.Empty;
@@ -344,7 +344,7 @@ public partial class GamePage : ContentPage
         if (rowOrColumn == 0) board.xCurrLength++;
         else board.yCurrLength++;
         leadingPlayer.IsExpansionDone = true;
-        ExpansionCount.Text = $"Îñòàëîñü ðàñøèðåíèé: 0";
+        ExpansionCount.Text = $": 0";
         await notification;
     }
 

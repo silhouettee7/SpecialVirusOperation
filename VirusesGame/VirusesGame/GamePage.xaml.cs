@@ -290,4 +290,9 @@ public partial class GamePage : ContentPage
         await DisplayNotification("Вы использовали расширение!");
     }
 
+    private async void OnTieButtonClicked(object sender, EventArgs e)
+    {
+        await DisplayNotification("Ничья хуле");
+    }
+
 }

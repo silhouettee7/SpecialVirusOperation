@@ -3,9 +3,11 @@ using VirusesGame.Interfaces;
 using VirusesGame.Enums;
 namespace VirusesGame.Classes
 {
-    internal class Player : IPlay
+    public class Player : IPlay
     {
         private Stack<Tuple<int, int>> moves;
+        private static ValueTuple<int, int>[] nearbyCellsCoords = new ValueTuple<int, int>[] { (1, 0), (0, 1), (0, -1), (-1, 0)};
+        public int InjectionsLeft { get; private set; } = 3;
         public HashSet<ValueTuple<int, int>> AllLivingCells { get; }
         public (State nativeSymbol, State capturedSymbol) Symbols { get; }
         public string Name { get; }
@@ -19,6 +21,25 @@ namespace VirusesGame.Classes
             {
                 nativeSymbol == State.Zero ? (9,0) : (0,9)
             };
+        }
+        public void UseInjection(Board board, int x, int y)
+        {
+            DecreaseNumberOfInjections();
+            foreach (var nearbyCoord in nearbyCellsCoords)
+            {
+                if (x + nearbyCoord.Item1 < 0
+                    || y + nearbyCoord.Item2 < 0
+                        || x + nearbyCoord.Item1 > 9
+                            || y + nearbyCoord.Item2 > 9)
+                    continue;
+                if (board[x, y].State == board[x + nearbyCoord.Item1, y + nearbyCoord.Item2].State)
+                {
+                    board[x + nearbyCoord.Item1, y + nearbyCoord.Item2].State = State.Empty;
+                    board[x + nearbyCoord.Item1, y + nearbyCoord.Item2].PreviousState = State.Empty;
+                }
+            }
+            board[x, y].State = State.Empty;
+            board[x, y].PreviousState = State.Empty;
         }
         public (int x, int y) CancelMove(Board board)
         {
@@ -87,6 +108,11 @@ namespace VirusesGame.Classes
         {
             CountMoves = 0;
             moves.Clear();
+        }
+
+        public void DecreaseNumberOfInjections()
+        {
+            InjectionsLeft--;
         }
     }
 }

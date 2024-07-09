@@ -14,34 +14,16 @@ public partial class GamePage : ContentPage
     private Player secondPlayer;
     private bool injectionSelectionMode;
     private static ValueTuple<int, int>[] nearbyCellsCoords = new ValueTuple<int, int>[] {(0, 0), (1, 0), (0, 1), (0, -1), (-1, 0) };
-
     public GamePage()
     {
         InitializeComponent();
-        BuildBoardButtons();
+        InitializeBoards();
         InitializePlayers();
     }
-    private async void BuildBoardButtons()
+    private async void InitializeBoards()
     {
         boardButtons = new ImageButton[12, 12];
-        InitializeBoardButtons();
         board = new Board(12, 12);
-        board.Initialize();
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                await Task.Run(() =>
-                {
-                    Dispatcher.DispatchAsync(() =>
-                        boardButtons[i, j].Source = LoadImages(i, j));
-                });
-            }
-        }
-    }
-
-    private void InitializeBoardButtons()
-    {
         for (int i = 0; i < 12; i++)
         {
             BoardGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(50) });
@@ -56,13 +38,24 @@ public partial class GamePage : ContentPage
         {
             for (int j = 0; j < 12; j++)
             {
+                board[i, j] = new Classes.Cell() { State = (i == 9 && j == 0) ? State.Cross
+                    :(i == 0 && j == 9) ? State.Zero
+                    : State.Empty};
                 boardButtons[i, j] = new ImageButton();
                 boardButtons[i, j].AutomationId = $"{i},{j}";
                 boardButtons[i, j].BorderColor = Colors.Black;
                 boardButtons[i, j].BorderWidth = 1;
                 boardButtons[i, j].Clicked += OnImageButtonClicked!;
                 boardButtons[i, j].BackgroundColor = Colors.White;
-                if (i < 10 && j < 10) BoardGrid.Add(boardButtons[i, j], j, i);
+                if (i < 10 && j < 10)
+                {
+                    BoardGrid.Add(boardButtons[i, j], j, i);
+                    await Task.Run(() =>
+                    {
+                        Dispatcher.DispatchAsync(() =>
+                            boardButtons[i, j].Source = LoadImages(i, j));
+                    });
+                }
             }
         }
     }
@@ -110,8 +103,8 @@ public partial class GamePage : ContentPage
                     {
                         if (location.x + nearbyCoord.Item1 < 0
                             || location.y + nearbyCoord.Item2 < 0
-                                || location.x + nearbyCoord.Item1 > 9
-                                    || location.y + nearbyCoord.Item2 > 9)
+                                || location.x + nearbyCoord.Item1 > board.xCurrLength-1
+                                    || location.y + nearbyCoord.Item2 > board.yCurrLength-1)
                             continue;
                         if (board[location.x + nearbyCoord.Item1, location.y + nearbyCoord.Item2].State == State.Empty)
                         {
@@ -308,14 +301,29 @@ public partial class GamePage : ContentPage
 
     private async void OnExpansionButtonClicked(object sender, EventArgs e)
     {
-        if (leadingPlayer.IsExpansionDone) return;
+        if (leadingPlayer.IsExpansionDone)
+        {
+            await DisplayNotification("Вы уже использовали расширение");
+            return;
+        }
+        if (leadingPlayer.CountMoves > 0) 
+        {
+            await DisplayNotification("Используйте расширение до начала хода");
+            return;
+        } 
         var random = new Random();
         var rowOrColumn = random.Next(0, 2);
         var positionInBoard = random.Next(0, rowOrColumn == 0 ? board.xCurrLength + 1 : board.yCurrLength + 1);
+        var notification = DisplayNotification("Вы использовали расширение!");
+        for (int i = 0; i < (rowOrColumn == 0 ? board.yCurrLength: board.xCurrLength); i++)
+        {
+            if (rowOrColumn == 0) BoardGrid.Add(boardButtons[board.xCurrLength, i], i, board.xCurrLength);
+            else BoardGrid.Add(boardButtons[i,board.yCurrLength],board.yCurrLength,i);
+        }
         int xStart = rowOrColumn == 0 ? positionInBoard : 0;
         int yStart = rowOrColumn == 1 ? positionInBoard : 0;
         var list = new State[board.yCurrLength];
-        var notification = DisplayNotification("Вы использовали расширение!");
+        var shiftedCells = new HashSet<(int x, int y)>();
         for (int i = xStart; i < board.xCurrLength + (rowOrColumn == 1 ? 0 : 1); i++)
         {
             var tempPrevState = State.Empty;
@@ -325,29 +333,31 @@ public partial class GamePage : ContentPage
                 {
                     var tempCurrState = board[i, j].State;
                     board[i, j].State = tempPrevState;
+                    if (tempCurrState != State.Empty  || tempPrevState != State.Empty) shiftedCells.Add((i, j));
                     tempPrevState = tempCurrState;
-                    if (j == board.yCurrLength) BoardGrid.Add(boardButtons[i, j], j, i);
                 }
                 else
                 {
                     var tempCurrState = board[i, j].State;
                     board[i, j].State = list[j];
+                    if (tempCurrState != State.Empty || list[j] != State.Empty ) shiftedCells.Add((i, j));
                     list[j] = tempCurrState;
-                    if (i == board.xCurrLength) BoardGrid.Add(boardButtons[i, j], j, i);
                 }
-
-                await Task.Run(() => Dispatcher.DispatchAsync(() =>
-                        boardButtons[i, j].Source = LoadImages(i, j)));
-
             }
         }
+        foreach(var cell in shiftedCells)
+        {
+            await Task.Run(() =>
+            {
+                Dispatcher.DispatchAsync(() =>
+                    boardButtons[cell.x, cell.y].Source = LoadImages(cell.x, cell.y));
+            });
+        }
+        
         if (rowOrColumn == 0) board.xCurrLength++;
         else board.yCurrLength++;
         leadingPlayer.IsExpansionDone = true;
         ExpansionCount.Text = $": 0";
         await notification;
     }
-
-    
-
 }

@@ -26,8 +26,8 @@ namespace VirusesGame.Classes
             {
                 if (x + nearbyCoord.Item1 < 0
                     || y + nearbyCoord.Item2 < 0
-                        || x + nearbyCoord.Item1 > 9
-                            || y + nearbyCoord.Item2 > 9)
+                        || x + nearbyCoord.Item1 > board.xCurrLength
+                            || y + nearbyCoord.Item2 > board.yCurrLength)
                     continue;
                 if (board[x, y].State == board[x + nearbyCoord.Item1, y + nearbyCoord.Item2].State)
                 {
